@@ -1,6 +1,9 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Base.Theme.NewsApp" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <item name="android:statusBarColor">@color/primary_60</item>
+        <item name="android:navigationBarColor">@color/primary_60</item>
 
         <item name="colorPrimary">@color/primary_40</item>
         <item name="colorOnPrimary">@color/primary_100</item>
@@ -35,4 +38,14 @@
     </style>
 
     <style name="Theme.NewsApp" parent="Base.Theme.NewsApp" />
+
+    <style name="Theme.SplashScreen" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <item name="android:colorBackground">@color/primary_60</item>
+        <item name="android:statusBarColor">@color/primary_60</item>
+        <item name="android:navigationBarColor">@color/primary_60</item>
+
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@color/primary_60</item>
+        <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="s">0</item>
+    </style>
 </resources>
