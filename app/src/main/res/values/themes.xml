@@ -35,6 +35,26 @@
 
         <item name="colorOutline">@color/neutral_variant_50</item>
         <item name="colorOutlineVariant">@color/neutral_variant_80</item>
+
+
+        <!--    Typography    -->
+        <item name="android:textColorPrimary">@color/primary_0</item>
+
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.NewsApp.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.NewsApp.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.NewsApp.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.NewsApp.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.NewsApp.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.NewsApp.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.NewsApp.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.NewsApp.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.NewsApp.TitleSmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.NewsApp.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.NewsApp.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.NewsApp.LabelSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.NewsApp.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.NewsApp.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.NewsApp.BodySmall</item>
     </style>
 
     <style name="Theme.NewsApp" parent="Base.Theme.NewsApp" />
@@ -45,7 +65,8 @@
         <item name="android:statusBarColor">@color/primary_60</item>
         <item name="android:navigationBarColor">@color/primary_60</item>
 
-        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@color/primary_60</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@color/primary_60
+        </item>
         <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="s">0</item>
     </style>
 </resources>

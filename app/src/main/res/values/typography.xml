@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="TextAppearance.NewsApp.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontWeight" tools:targetApi="o">400</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontWeight" tools:targetApi="o">400</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.DisplaySmall" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontWeight" tools:targetApi="o">400</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontWeight" tools:targetApi="o">400</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontWeight" tools:targetApi="o">400</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontWeight" tools:targetApi="o">400</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontWeight" tools:targetApi="o">400</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:fontWeight" tools:targetApi="o">500</item>
+        <item name="fontWeight">500</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:fontWeight" tools:targetApi="o">500</item>
+        <item name="fontWeight">500</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:fontWeight" tools:targetApi="o">500</item>
+        <item name="fontWeight">500</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:fontWeight" tools:targetApi="o">500</item>
+        <item name="fontWeight">500</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:fontWeight" tools:targetApi="o">500</item>
+        <item name="fontWeight">500</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontWeight" tools:targetApi="o">400</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontWeight" tools:targetApi="o">400</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.NewsApp.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontWeight" tools:targetApi="o">400</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+
+
+</resources>
