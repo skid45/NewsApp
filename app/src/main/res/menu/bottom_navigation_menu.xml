@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottom_menu_headlines"
+        android:icon="@drawable/ic_headlines"
+        android:title="@string/headlines" />
+
+    <item
+        android:id="@+id/bottom_menu_saved"
+        android:icon="@drawable/ic_favourite"
+        android:title="@string/saved" />
+
+    <item
+        android:id="@+id/bottom_menu_sources"
+        android:icon="@drawable/ic_sources"
+        android:title="@string/sources" />
+</menu>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BottomNavigationViewStyle" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/primary_60</item>
+        <item name="itemIconTint">@color/primary_100</item>
+        <item name="itemActiveIndicatorStyle">
+            @style/Widget.Material3.BottomNavigationView.ActiveIndicator.Primary50
+        </item>
+        <item name="itemTextAppearanceActive">?attr/textAppearanceLabelMedium</item>
+        <item name="itemTextAppearanceActiveBoldEnabled">false</item>
+        <item name="itemTextColor">@color/primary_100</item>
+        <item name="labelVisibilityMode">selected</item>
+    </style>
+
+    <style name="Widget.Material3.BottomNavigationView.ActiveIndicator.Primary50">
+        <item name="android:color">@color/primary_50</item>
+    </style>
+
+</resources>

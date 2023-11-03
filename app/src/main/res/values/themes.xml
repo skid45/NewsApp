@@ -55,6 +55,9 @@
         <item name="textAppearanceBodyLarge">@style/TextAppearance.NewsApp.BodyLarge</item>
         <item name="textAppearanceBodyMedium">@style/TextAppearance.NewsApp.BodyMedium</item>
         <item name="textAppearanceBodySmall">@style/TextAppearance.NewsApp.BodySmall</item>
+
+
+        <item name="bottomNavigationStyle">@style/BottomNavigationViewStyle</item>
     </style>
 
     <style name="Theme.NewsApp" parent="Base.Theme.NewsApp" />
