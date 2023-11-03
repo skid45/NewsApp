@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
 }
 
 android {
@@ -48,6 +49,13 @@ dependencies {
 
     val lottieVersion = "6.1.0"
     implementation("com.airbnb.android:lottie:$lottieVersion")
+
+    val daggerVersion = "2.48.1"
+    implementation("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+
+    val ciceroneVersion = "7.1"
+    implementation("com.github.terrakok:cicerone:$ciceroneVersion")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
