@@ -2,6 +2,7 @@ package com.skid.newsapp.ui
 
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
@@ -29,12 +30,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.activityMainToolbar)
 
         setupBottomNavigation()
 
         if (savedInstanceState == null) {
             binding.activityMainBottomNavigationView.selectedItemId = R.id.bottom_menu_headlines
         }
+
     }
 
 
@@ -76,5 +79,16 @@ class MainActivity : AppCompatActivity() {
         if (supportFragmentManager.backStackEntryCount == 0)
             binding.activityMainBottomNavigationView.selectedItemId =
                 savedInstanceState?.getInt(SELECTED_ITEM_ID_KEY) ?: R.id.bottom_menu_headlines
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.main_activity_menu_filter -> {
+                router.navigateTo(TODO("FilterScreen"))
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

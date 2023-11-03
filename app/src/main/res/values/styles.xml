@@ -17,4 +17,11 @@
         <item name="android:color">@color/primary_50</item>
     </style>
 
+    <style name="MaterialToolbarStyle" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/primary_60</item>
+        <item name="titleCentered">true</item>
+        <item name="titleTextAppearance">?attr/textAppearanceTitleLarge</item>
+        <item name="titleTextColor">@color/neutral_99</item>
+    </style>
+
 </resources>

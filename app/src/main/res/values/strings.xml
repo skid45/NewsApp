@@ -3,4 +3,6 @@
     <string name="headlines">Headlines</string>
     <string name="saved">Saved</string>
     <string name="sources">Sources</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
 </resources>
