@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="32dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/sources_item_image"
+        style="@style/CircleImageViewStyle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/cnn" />
+
+    <TextView
+        android:id="@+id/sources_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:textColor="?attr/colorOnSurface"
+        app:layout_constraintStart_toEndOf="@id/sources_item_image"
+        app:layout_constraintTop_toTopOf="@id/sources_item_image"
+        tools:text="CNN" />
+
+    <TextView
+        android:id="@+id/sources_item_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        app:layout_constraintStart_toStartOf="@id/sources_item_name"
+        app:layout_constraintTop_toBottomOf="@id/sources_item_name"
+        tools:text="General" />
+
+    <TextView
+        android:id="@+id/sources_item_pipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:gravity="center"
+        android:text="@string/pipe"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        app:layout_constraintStart_toEndOf="@id/sources_item_category"
+        app:layout_constraintTop_toTopOf="@id/sources_item_category" />
+
+    <TextView
+        android:id="@+id/sources_item_country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        app:layout_constraintStart_toEndOf="@id/sources_item_pipe"
+        app:layout_constraintTop_toTopOf="@id/sources_item_category"
+        tools:text="USA" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

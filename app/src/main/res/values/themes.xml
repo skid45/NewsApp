@@ -59,6 +59,7 @@
 
         <item name="bottomNavigationStyle">@style/BottomNavigationViewStyle</item>
         <item name="toolbarStyle">@style/MaterialToolbarStyle</item>
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
     </style>
 
     <style name="Theme.NewsApp" parent="Base.Theme.NewsApp" />

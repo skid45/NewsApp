@@ -7,4 +7,5 @@
     <string name="filter">Filter</string>
     <string name="something_went_wrong_try_later">Something went wrong\nTry later</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="pipe">|</string>
 </resources>

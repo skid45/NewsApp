@@ -22,6 +22,16 @@
         <item name="titleCentered">true</item>
         <item name="titleTextAppearance">?attr/textAppearanceTitleLarge</item>
         <item name="titleTextColor">@color/neutral_99</item>
+        <item name="collapseIcon">@drawable/ic_arrow_back</item>
+    </style>
+
+    <style name="CircleImageViewStyle">
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar">
+        <item name="searchIcon">@drawable/ic_search</item>
     </style>
 
 </resources>
