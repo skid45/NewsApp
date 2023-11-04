@@ -16,6 +16,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_KEY", "${project.properties["API_KEY"]}")
     }
 
     buildTypes {
@@ -37,6 +39,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -53,6 +56,10 @@ dependencies {
     val daggerVersion = "2.48.1"
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+
+    val retrofitVersion = "2.9.0"
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     val ciceroneVersion = "7.1"
     implementation("com.github.terrakok:cicerone:$ciceroneVersion")
