@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    tools:context=".ui.filters.FiltersFragment">
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/filters_button_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        tools:checkedButton="@id/filters_new_button">
+
+        <Button
+            android:id="@+id/filters_popular_button"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/popular" />
+
+        <Button
+            android:id="@+id/filters_new_button"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/new_word" />
+
+        <Button
+            android:id="@+id/filters_relevant_button"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/relevant" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/date"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
+            android:textColor="?attr/colorOnSurface" />
+
+        <TextView
+            android:id="@+id/filters_choose_date_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/choose_date"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
+            android:textColor="?attr/colorOutline" />
+
+        <Button
+            android:id="@+id/filters_choose_date_button"
+            style="?attr/materialIconButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_calendar"
+            app:iconTint="?attr/colorOnSurfaceVariant" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/language"
+        android:textAppearance="?attr/textAppearanceLabelSmall"
+        android:textColor="?attr/colorOnSurface" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/filters_chips_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:chipSpacingHorizontal="4dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/filters_russian_chip"
+            style="@style/Widget.Material3.Chip.Suggestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/russian"
+            tools:checked="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/filters_english_chip"
+            style="@style/Widget.Material3.Chip.Suggestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/english" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/filters_deutsch_chip"
+            style="@style/Widget.Material3.Chip.Suggestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/deutsch" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+</LinearLayout>

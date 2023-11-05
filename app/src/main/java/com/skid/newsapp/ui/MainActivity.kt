@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.main_activity_menu_filter -> {
-                        //router.navigateTo(TODO("FilterScreen"))
+                        router.navigateTo(Screens.FiltersScreen)
                         true
                     }
 
