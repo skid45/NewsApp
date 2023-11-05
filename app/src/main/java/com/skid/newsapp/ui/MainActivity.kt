@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageView
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.MenuProvider
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
@@ -42,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.activityMainToolbar)
 
-
+        setupToolbar()
         setupBottomNavigation()
 
         if (savedInstanceState == null) {
@@ -50,7 +52,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
 
     private fun setupBottomNavigation() = with(binding) {
         activityMainBottomNavigationView.setOnItemSelectedListener { item ->
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
     }
 
     override fun onResumeFragments() {
@@ -92,36 +94,42 @@ class MainActivity : AppCompatActivity() {
                 savedInstanceState?.getInt(SELECTED_ITEM_ID_KEY) ?: R.id.bottom_menu_headlines
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main_activity_menu, menu)
-        val searchView = menu.findItem(R.id.main_activity_menu_search).actionView as SearchView
-        val searchEditText =
-            searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
-        val searchCloseButton =
-            searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
+    private fun setupToolbar() {
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.main_activity_menu, menu)
+                val searchView =
+                    menu.findItem(R.id.main_activity_menu_search).actionView as SearchView
+                val searchEditText =
+                    searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+                val searchCloseButton =
+                    searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
 
-        val onPrimary = resolveAttributeColor(com.google.android.material.R.attr.colorOnPrimary)
-        val surfaceVariant =
-            resolveAttributeColor(com.google.android.material.R.attr.colorSurfaceVariant)
-        searchEditText.setTextAppearance(R.style.TextAppearance_NewsApp_BodyLarge_OnPrimary)
-        searchEditText.setHintTextColor(surfaceVariant)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            searchEditText.textCursorDrawable =
-                AppCompatResources.getDrawable(this, R.drawable.cursor)
-        }
-        DrawableCompat.setTint(searchCloseButton.drawable, onPrimary)
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.main_activity_menu_filter -> {
-                //router.navigateTo(TODO("FilterScreen"))
-                true
+                val onPrimary =
+                    resolveAttributeColor(com.google.android.material.R.attr.colorOnPrimary)
+                val surfaceVariant =
+                    resolveAttributeColor(com.google.android.material.R.attr.colorSurfaceVariant)
+                searchEditText.setTextAppearance(R.style.TextAppearance_NewsApp_BodyLarge_OnPrimary)
+                searchEditText.setHintTextColor(surfaceVariant)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    searchEditText.textCursorDrawable =
+                        AppCompatResources.getDrawable(this@MainActivity, R.drawable.cursor)
+                }
+                DrawableCompat.setTint(searchCloseButton.drawable, onPrimary)
             }
 
-            else -> super.onOptionsItemSelected(item)
-        }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.main_activity_menu_filter -> {
+                        //router.navigateTo(TODO("FilterScreen"))
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        })
     }
+
+
 }
