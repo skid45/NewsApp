@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:singleSelection="true"
         app:selectionRequired="true"
+        app:singleSelection="true"
         tools:checkedButton="@id/filters_new_button">
 
         <Button
@@ -67,9 +67,11 @@
 
         <Button
             android:id="@+id/filters_choose_date_button"
-            style="?attr/materialIconButtonStyle"
+            style="?attr/materialIconButtonFilledStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/choose_date_button"
             app:icon="@drawable/ic_calendar"
             app:iconTint="?attr/colorOnSurfaceVariant" />
 

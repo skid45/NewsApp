@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.activityMainToolbar)
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         setupToolbar()
         setupBottomNavigation()
@@ -95,6 +97,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_activity_menu, menu)
@@ -128,8 +131,33 @@ class MainActivity : AppCompatActivity() {
                     else -> false
                 }
             }
+
         })
     }
 
+    private fun onBackNavigate(): Boolean {
+        return if (supportFragmentManager.backStackEntryCount > 0) {
+            router.exit()
+            if (supportFragmentManager.backStackEntryCount == 1) {
+                supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            }
+            true
+        } else false
+
+    }
+
+    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (!onBackNavigate()) {
+                isEnabled = false
+                onBackPressedDispatcher.onBackPressed()
+            }
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
+    }
 
 }

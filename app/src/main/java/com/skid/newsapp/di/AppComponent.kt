@@ -5,6 +5,7 @@ import com.skid.newsapp.di.module.NavigationModule
 import com.skid.newsapp.di.module.NetworkModule
 import com.skid.newsapp.di.module.ResourceModule
 import com.skid.newsapp.ui.MainActivity
+import com.skid.newsapp.ui.filters.FiltersFragment
 import com.skid.newsapp.ui.sources.SourcesFragment
 import dagger.BindsInstance
 import dagger.Component
@@ -22,6 +23,7 @@ interface AppComponent {
 
     fun inject(activity: MainActivity)
     fun inject(fragment: SourcesFragment)
+    fun inject(fragment: FiltersFragment)
 
     @Component.Factory
     interface Factory {

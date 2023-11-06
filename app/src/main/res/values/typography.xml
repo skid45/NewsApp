@@ -110,6 +110,12 @@
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
+    <style name="TextAppearance.NewsApp.LabelSmall.Primary">
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
 
+    <style name="TextAppearance.NewsApp.LabelSmall.Outline">
+        <item name="android:textColor">?attr/colorOutline</item>
+    </style>
 
 </resources>

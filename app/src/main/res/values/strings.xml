@@ -5,6 +5,7 @@
     <string name="sources">Sources</string>
     <string name="search">Search</string>
     <string name="filter">Filter</string>
+    <string name="filters">Filters</string>
     <string name="something_went_wrong_try_later">Something went wrong\nTry later</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="pipe">|</string>
@@ -17,4 +18,6 @@
     <string name="russian">Русский</string>
     <string name="english">English</string>
     <string name="deutsch">Deutsch</string>
+    <string name="done">Done</string>
+    <string name="choose_date_button">Choose date button</string>
 </resources>
