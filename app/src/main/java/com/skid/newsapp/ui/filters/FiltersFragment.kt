@@ -22,9 +22,9 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.skid.newsapp.R
 import com.skid.newsapp.appComponent
+import com.skid.newsapp.databinding.FragmentFiltersBinding
 import com.skid.newsapp.domain.model.Language
 import com.skid.newsapp.domain.model.Sorting
-import com.skid.newsapp.databinding.FragmentFiltersBinding
 import com.skid.newsapp.utils.getDisplayChosenRange
 import com.skid.newsapp.utils.resolveAttributeColor
 import java.util.Calendar
@@ -109,15 +109,6 @@ class FiltersFragment : Fragment() {
                 } else null
             }
         }
-
-        filtersViewModel.uiState.value?.sortBy?.let { sortBy ->
-            filtersButtonGroup.children.forEach { button ->
-                button as MaterialButton
-                if (button.text.toString().lowercase() == sortBy.name.lowercase()) {
-                    filtersButtonGroup.check(button.id)
-                }
-            }
-        }
     }
 
     private fun setupChipsGroup() = with(binding) {
@@ -133,12 +124,6 @@ class FiltersFragment : Fragment() {
                 .toList()
 
             filtersViewModel.onEvent(FiltersEvent.OnLanguagesChanged(selectedLanguages))
-        }
-
-        filtersViewModel.uiState.value?.languages?.forEach { language ->
-            filtersChipsGroup.children.forEach { chip -> chip as Chip
-                if (chip.text.toString() == language.title) filtersChipsGroup.check(chip.id)
-            }
         }
     }
 
@@ -160,6 +145,9 @@ class FiltersFragment : Fragment() {
                 timeInMillis = selection.second
             }
             filtersViewModel.onEvent(FiltersEvent.OnChosenDatesChanged(startCalendar to endCalendar))
+        }
+        datePicker.addOnNegativeButtonClickListener {
+            filtersViewModel.onEvent(FiltersEvent.OnChosenDatesChanged(null))
         }
     }
 
@@ -184,6 +172,20 @@ class FiltersFragment : Fragment() {
                 datePickerButton.iconTint = ColorStateList.valueOf(onPrimaryColor)
                 filtersChooseDateTextView.text = uiState.chosenDates.getDisplayChosenRange()
                 filtersChooseDateTextView.setTextColor(ColorStateList.valueOf(primaryColor))
+            }
+
+            uiState.languages.forEach { language ->
+                filtersChipsGroup.children.forEach { chip ->
+                    chip as Chip
+                    if (chip.text.toString() == language.title) filtersChipsGroup.check(chip.id)
+                }
+            }
+
+            filtersButtonGroup.children.forEach { button ->
+                button as MaterialButton
+                if (button.text.toString().lowercase() == uiState.sortBy.name.lowercase()) {
+                    filtersButtonGroup.check(button.id)
+                }
             }
         }
     }

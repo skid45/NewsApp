@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun onBackNavigate(): Boolean {
+    private fun onNavigateBack(): Boolean {
         return if (supportFragmentManager.backStackEntryCount > 0) {
             router.exit()
             if (supportFragmentManager.backStackEntryCount == 1) {
@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
 
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            if (!onBackNavigate()) {
+            if (!onNavigateBack()) {
                 isEnabled = false
                 onBackPressedDispatcher.onBackPressed()
             }

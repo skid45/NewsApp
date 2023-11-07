@@ -1,6 +1,7 @@
 package com.skid.newsapp.di
 
 import android.content.Context
+import com.skid.newsapp.di.module.FiltersModule
 import com.skid.newsapp.di.module.NavigationModule
 import com.skid.newsapp.di.module.NetworkModule
 import com.skid.newsapp.di.module.ResourceModule
@@ -16,7 +17,8 @@ import javax.inject.Singleton
     modules = [
         NavigationModule::class,
         ResourceModule::class,
-        NetworkModule::class
+        NetworkModule::class,
+        FiltersModule::class
     ]
 )
 interface AppComponent {
