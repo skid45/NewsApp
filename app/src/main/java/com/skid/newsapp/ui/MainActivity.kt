@@ -9,6 +9,8 @@ import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
@@ -17,13 +19,18 @@ import androidx.core.view.MenuProvider
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.skid.newsapp.R
 import com.skid.newsapp.appComponent
 import com.skid.newsapp.databinding.ActivityMainBinding
 import com.skid.newsapp.ui.navigation.Screens
 import com.skid.utils.Constants.SELECTED_ITEM_ID_KEY
+import com.skid.utils.collectFlow
 import com.skid.utils.resolveAttributeColor
 import javax.inject.Inject
+import javax.inject.Provider
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,7 +43,13 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
 
+    @Inject
+    lateinit var viewModelProvider: Provider<MainViewModel.Factory>
+    private val mainViewModel: MainViewModel by viewModels { viewModelProvider.get() }
+
     private val navigator = AppNavigator(this, R.id.activity_main_fragment_container_view)
+
+    private var filtersBadgeDrawable: BadgeDrawable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
@@ -48,6 +61,7 @@ class MainActivity : AppCompatActivity() {
 
         setupToolbar()
         setupBottomNavigation()
+        collectNumberOfFilters()
 
         if (savedInstanceState == null) {
             binding.activityMainBottomNavigationView.selectedItemId = R.id.bottom_menu_headlines
@@ -95,6 +109,7 @@ class MainActivity : AppCompatActivity() {
                 savedInstanceState?.getInt(SELECTED_ITEM_ID_KEY) ?: R.id.bottom_menu_headlines
     }
 
+    @OptIn(ExperimentalBadgeUtils::class)
     private fun setupToolbar() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         addMenuProvider(object : MenuProvider {
@@ -118,6 +133,16 @@ class MainActivity : AppCompatActivity() {
                         AppCompatResources.getDrawable(this@MainActivity, R.drawable.cursor)
                 }
                 DrawableCompat.setTint(searchCloseButton.drawable, onPrimary)
+
+                filtersBadgeDrawable = BadgeDrawable.create(this@MainActivity).apply {
+                    isVisible = mainViewModel.numberOfFilters.value > 0
+                    number = mainViewModel.numberOfFilters.value
+                }
+                BadgeUtils.attachBadgeDrawable(
+                    filtersBadgeDrawable!!,
+                    binding.activityMainToolbar,
+                    com.skid.ui.R.id.main_activity_menu_filter
+                )
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -157,6 +182,16 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return true
+    }
+
+
+    private fun collectNumberOfFilters() {
+        collectFlow(mainViewModel.numberOfFilters) { numberOfFilters ->
+            filtersBadgeDrawable?.apply {
+                isVisible = numberOfFilters > 0
+                number = numberOfFilters
+            }
+        }
     }
 
 }

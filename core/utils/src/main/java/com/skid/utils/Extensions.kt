@@ -3,6 +3,7 @@ package com.skid.utils
 import android.content.Context
 import android.util.TypedValue
 import androidx.annotation.AttrRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +29,14 @@ fun Context.resolveAttributeColor(@AttrRes attrId: Int): Int {
 fun <T : Flow<R>, R> Fragment.collectFlow(flow: T, collectBlock: (R) -> Unit) {
     viewLifecycleOwner.lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collect(collectBlock)
+        }
+    }
+}
+
+fun <T : Flow<R>, R> AppCompatActivity.collectFlow(flow: T, collectBlock: (R) -> Unit) {
+    lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
             flow.collect(collectBlock)
         }
     }

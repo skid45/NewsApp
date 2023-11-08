@@ -6,7 +6,9 @@ import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FiltersDataStorePreferencesManager @Inject constructor(
     private val filtersDataStore: DataStore<Preferences>,
 ) {
