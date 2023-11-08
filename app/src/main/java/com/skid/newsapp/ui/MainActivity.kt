@@ -21,8 +21,8 @@ import com.skid.newsapp.R
 import com.skid.newsapp.appComponent
 import com.skid.newsapp.databinding.ActivityMainBinding
 import com.skid.newsapp.ui.navigation.Screens
-import com.skid.newsapp.utils.Constants.SELECTED_ITEM_ID_KEY
-import com.skid.newsapp.utils.resolveAttributeColor
+import com.skid.utils.Constants.SELECTED_ITEM_ID_KEY
+import com.skid.utils.resolveAttributeColor
 import javax.inject.Inject
 
 
@@ -52,7 +52,6 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             binding.activityMainBottomNavigationView.selectedItemId = R.id.bottom_menu_headlines
         }
-
     }
 
     private fun setupBottomNavigation() = with(binding) {
@@ -100,9 +99,9 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.main_activity_menu, menu)
+                menuInflater.inflate(com.skid.ui.R.menu.main_activity_menu, menu)
                 val searchView =
-                    menu.findItem(R.id.main_activity_menu_search).actionView as SearchView
+                    menu.findItem(com.skid.ui.R.id.main_activity_menu_search).actionView as SearchView
                 val searchEditText =
                     searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
                 val searchCloseButton =
@@ -112,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                     resolveAttributeColor(com.google.android.material.R.attr.colorOnPrimary)
                 val surfaceVariant =
                     resolveAttributeColor(com.google.android.material.R.attr.colorSurfaceVariant)
-                searchEditText.setTextAppearance(R.style.TextAppearance_NewsApp_BodyLarge_OnPrimary)
+                searchEditText.setTextAppearance(com.skid.ui.R.style.TextAppearance_NewsApp_BodyLarge_OnPrimary)
                 searchEditText.setHintTextColor(surfaceVariant)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     searchEditText.textCursorDrawable =
@@ -123,7 +122,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.main_activity_menu_filter -> {
+                    com.skid.ui.R.id.main_activity_menu_filter -> {
                         router.navigateTo(Screens.FiltersScreen)
                         true
                     }

@@ -5,9 +5,11 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.skid.filters.di.FiltersDepsStore
 import com.skid.newsapp.di.AppComponent
 import com.skid.newsapp.di.DaggerAppComponent
-import com.skid.newsapp.utils.Constants.FILTERS_PREFERENCES
+import com.skid.sources.di.SourcesDepsStore
+import com.skid.utils.Constants.FILTERS_PREFERENCES
 
 class NewsApplication : Application() {
 
@@ -17,6 +19,8 @@ class NewsApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         _appComponent = DaggerAppComponent.factory().create(this)
+        SourcesDepsStore.deps = appComponent
+        FiltersDepsStore.deps = appComponent
     }
 }
 

@@ -1,8 +1,8 @@
 package com.skid.newsapp.di.module
 
-import com.skid.newsapp.data.remote.repository.SourcesRepositoryImpl
-import com.skid.newsapp.data.remote.service.SourcesService
-import com.skid.newsapp.domain.repository.SourcesRepository
+import com.skid.sources.repository.SourcesRepositoryImpl
+import com.skid.network.service.SourcesService
+import com.skid.sources.repository.SourcesRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

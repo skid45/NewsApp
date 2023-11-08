@@ -3,7 +3,7 @@ package com.skid.newsapp.di.module
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.skid.newsapp.BuildConfig
-import com.skid.newsapp.data.remote.utils.AuthInterceptor
+import com.skid.network.utils.AuthInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

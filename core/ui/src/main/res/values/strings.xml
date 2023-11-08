@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">NewsApp</string>
+    <string name="headlines">Headlines</string>
+    <string name="saved">Saved</string>
+    <string name="sources">Sources</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="filters">Filters</string>
+    <string name="something_went_wrong_try_later">Something went wrong\nTry later</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="pipe">|</string>
+    <string name="popular">Popular</string>
+    <string name="new_word">New</string>
+    <string name="relevant">Relevant</string>
+    <string name="date">Date</string>
+    <string name="choose_date">Choose date</string>
+    <string name="language">Language</string>
+    <string name="russian">Русский</string>
+    <string name="english">English</string>
+    <string name="deutsch">Deutsch</string>
+    <string name="done">Done</string>
+    <string name="choose_date_button">Choose date button</string>
+    <string name="select_date">Select date</string>
+</resources>

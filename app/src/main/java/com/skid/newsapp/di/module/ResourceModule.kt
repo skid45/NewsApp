@@ -1,7 +1,7 @@
 package com.skid.newsapp.di.module
 
 import android.content.Context
-import com.skid.newsapp.utils.ResourceWrapper
+import com.skid.utils.ResourceWrapper
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

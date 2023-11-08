@@ -1,13 +1,15 @@
 package com.skid.newsapp.di
 
 import android.content.Context
+import com.skid.filters.di.FiltersDeps
+import com.skid.filters.repository.FiltersRepository
 import com.skid.newsapp.di.module.FiltersModule
 import com.skid.newsapp.di.module.NavigationModule
 import com.skid.newsapp.di.module.NetworkModule
 import com.skid.newsapp.di.module.ResourceModule
 import com.skid.newsapp.ui.MainActivity
-import com.skid.newsapp.ui.filters.FiltersFragment
-import com.skid.newsapp.ui.sources.SourcesFragment
+import com.skid.sources.di.SourcesDeps
+import com.skid.sources.repository.SourcesRepository
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -21,11 +23,13 @@ import javax.inject.Singleton
         FiltersModule::class
     ]
 )
-interface AppComponent {
+interface AppComponent : SourcesDeps, FiltersDeps {
+
+    override val filtersRepository: FiltersRepository
+
+    override val sourcesRepository: SourcesRepository
 
     fun inject(activity: MainActivity)
-    fun inject(fragment: SourcesFragment)
-    fun inject(fragment: FiltersFragment)
 
     @Component.Factory
     interface Factory {

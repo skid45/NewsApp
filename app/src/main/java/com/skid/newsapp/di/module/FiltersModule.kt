@@ -3,8 +3,8 @@ package com.skid.newsapp.di.module
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.skid.newsapp.data.local.repository.FiltersRepositoryImpl
-import com.skid.newsapp.domain.repository.FiltersRepository
+import com.skid.filters.repository.FiltersRepositoryImpl
+import com.skid.filters.repository.FiltersRepository
 import com.skid.newsapp.filtersDataStore
 import dagger.Binds
 import dagger.Module

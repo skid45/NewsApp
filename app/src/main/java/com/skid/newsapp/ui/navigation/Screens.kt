@@ -1,8 +1,8 @@
 package com.skid.newsapp.ui.navigation
 
 import com.github.terrakok.cicerone.androidx.FragmentScreen
-import com.skid.newsapp.ui.filters.FiltersFragment
-import com.skid.newsapp.ui.sources.SourcesFragment
+import com.skid.filters.FiltersFragment
+import com.skid.sources.SourcesFragment
 
 object Screens {
 //    val HeadlinesScreen get() = FragmentScreen { HeadlinesFragment() }

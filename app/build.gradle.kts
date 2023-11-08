@@ -73,6 +73,20 @@ dependencies {
     val dataStoreVersion = "1.0.0"
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
+    // Core modules
+    implementation(project(":core:datastore"))
+    implementation(project(":core:network"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:utils"))
+
+    // Data modules
+    implementation(project(":data:filters"))
+    implementation(project(":data:sources"))
+
+    // Feature modules
+    implementation(project(":feature:filters"))
+    implementation(project(":feature:sources"))
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
