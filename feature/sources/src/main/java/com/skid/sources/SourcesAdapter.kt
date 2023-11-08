@@ -30,6 +30,7 @@ class SourcesAdapter(private val onItemClick: (Source) -> Unit) :
             sourcesItemName.text = source.name
             sourcesItemCategory.text = source.category
             sourcesItemCountry.text = source.country
+            sourcesItemImage.setImageResource(source.drawableResId)
         }
     }
 
