@@ -11,13 +11,26 @@
         android:layout_height="wrap_content"
         android:background="@color/primary_60"
         android:visibility="gone"
-        tools:listitem="@layout/sources_item"
-        tools:itemCount="3"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sources_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        tools:itemCount="3"
         tools:listitem="@layout/sources_item" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/sources_swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/sources_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/sources_item" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/sources_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
 </FrameLayout>

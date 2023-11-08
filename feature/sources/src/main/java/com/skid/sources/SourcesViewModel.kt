@@ -6,17 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.skid.sources.model.Source
 import com.skid.sources.repository.SourcesRepository
 import com.skid.sources.usecase.GetSourcesByQueryUseCase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
@@ -26,47 +17,42 @@ class SourcesViewModel @Inject constructor(
     private val getSourcesByQueryUseCase: GetSourcesByQueryUseCase,
 ) : ViewModel() {
 
-    private val _sources = MutableStateFlow(emptyList<Source>())
-    val sources = _sources.asStateFlow()
-
-    private val _error = MutableStateFlow<String?>(null)
-    val error = _error.asStateFlow()
-
-    private val _query = MutableStateFlow("")
-    val query = _query.asStateFlow()
-
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val sourcesByQuery: StateFlow<List<Source>> = query
-        .debounce(200)
-        .mapLatest { query ->
-            val result = getSourcesByQueryUseCase(query)
-            if (result.isSuccess) {
-                result.getOrThrow()
-            } else {
-                _error.value = result.exceptionOrNull()?.localizedMessage
-                emptyList()
-            }
-        }
-        .flowOn(Dispatchers.Default)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    private val _uiState = MutableStateFlow<SourcesUiState>(SourcesUiState.Loading)
+    val uiState = _uiState.asStateFlow()
 
     init {
-        updateSources()
+        onEvent(SourcesEvent.OnUpdateSources)
     }
 
-    fun updateSources() {
-        viewModelScope.launch {
-            val result = sourcesRepository.getSources()
-            if (result.isSuccess) {
-                _sources.value = result.getOrThrow()
-            } else {
-                _error.value = result.exceptionOrNull()?.localizedMessage
+    fun onEvent(event: SourcesEvent) {
+        when (event) {
+            SourcesEvent.OnUpdateSources -> {
+                _uiState.value =
+                    if (uiState.value is SourcesUiState.Success) SourcesUiState.Refresh
+                    else SourcesUiState.Loading
+                updateSources()
             }
+
+            is SourcesEvent.OnSearchByQuery -> searchByQuery(event.query)
         }
     }
 
-    fun onQueryChanged(query: String) {
-        _query.value = query
+    private fun updateSources() {
+        viewModelScope.launch {
+            val result = sourcesRepository.getSources()
+            _uiState.value =
+                if (result.isSuccess) SourcesUiState.Success(result.getOrThrow())
+                else SourcesUiState.Error(result.exceptionOrNull()?.localizedMessage ?: "")
+        }
+    }
+
+    private fun searchByQuery(query: String) {
+        viewModelScope.launch {
+            val result = getSourcesByQueryUseCase(query)
+            _uiState.value =
+                if (result.isSuccess) SourcesUiState.Search(result.getOrThrow())
+                else SourcesUiState.Error(result.exceptionOrNull()?.localizedMessage ?: "")
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -78,4 +64,20 @@ class SourcesViewModel @Inject constructor(
             return viewModelProvider.get() as T
         }
     }
+}
+
+sealed class SourcesUiState {
+
+    data object Refresh : SourcesUiState()
+    data object Loading : SourcesUiState()
+    data class Success(val sources: List<Source>) : SourcesUiState()
+    data class Error(val message: String) : SourcesUiState()
+    data class Search(val sourcesByQuery: List<Source>) : SourcesUiState()
+}
+
+sealed class SourcesEvent {
+
+    data object OnUpdateSources : SourcesEvent()
+    data class OnSearchByQuery(val query: String) : SourcesEvent()
+
 }

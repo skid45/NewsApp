@@ -56,6 +56,8 @@ dependencies {
     val lifecycleVersion = "2.6.2"
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
 
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
 
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))

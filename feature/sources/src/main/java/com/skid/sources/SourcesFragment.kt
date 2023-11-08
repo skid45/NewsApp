@@ -69,8 +69,8 @@ class SourcesFragment : Fragment() {
 
         setupToolbar()
         setupRecyclerView()
-        collectSources()
-        collectSourcesByQuery()
+        setupSwipeToRefresh()
+        collectUiState()
     }
 
     override fun onDestroyView() {
@@ -106,22 +106,19 @@ class SourcesFragment : Fragment() {
                     override fun onQueryTextSubmit(query: String?): Boolean = true
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        if (newText != null) sourcesViewModel.onQueryChanged(newText)
+                        if (newText != null) {
+                            sourcesViewModel.onEvent(SourcesEvent.OnSearchByQuery(newText))
+                        }
                         return true
                     }
                 }
             )
             searchItem.setOnActionExpandListener(
                 object : MenuItem.OnActionExpandListener {
-                    override fun onMenuItemActionExpand(p0: MenuItem): Boolean {
-                        binding.sourcesSearchRecyclerView.isVisible = true
-                        binding.sourcesRecyclerView.isVisible = false
-                        return true
-                    }
+                    override fun onMenuItemActionExpand(p0: MenuItem): Boolean = true
 
                     override fun onMenuItemActionCollapse(p0: MenuItem): Boolean {
-                        binding.sourcesSearchRecyclerView.isVisible = false
-                        binding.sourcesRecyclerView.isVisible = true
+                        sourcesViewModel.onEvent(SourcesEvent.OnUpdateSources)
                         return true
                     }
                 }
@@ -131,15 +128,43 @@ class SourcesFragment : Fragment() {
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean = true
     }
 
-    private fun collectSources() {
-        collectFlow(sourcesViewModel.sources) { sources ->
-            sourcesAdapter.submitList(sources)
+    private fun collectUiState() = with(binding) {
+        collectFlow(sourcesViewModel.uiState) { uiState ->
+            when (uiState) {
+                SourcesUiState.Refresh -> {
+                    sourcesSwipeRefreshLayout.isRefreshing = true
+                    sourcesProgressBar.isVisible = false
+                }
+
+                SourcesUiState.Loading -> {
+                    sourcesSearchRecyclerView.isVisible = false
+                    sourcesSwipeRefreshLayout.isVisible = false
+                    sourcesProgressBar.isVisible = true
+                }
+
+                is SourcesUiState.Success -> {
+                    sourcesAdapter.submitList(uiState.sources)
+                    sourcesSearchRecyclerView.isVisible = false
+                    sourcesSwipeRefreshLayout.isVisible = true
+                    sourcesProgressBar.isVisible = false
+                    sourcesSwipeRefreshLayout.isRefreshing = false
+                }
+
+                is SourcesUiState.Search -> {
+                    sourcesByQueryAdapter.submitList(uiState.sourcesByQuery)
+                    sourcesSearchRecyclerView.isVisible = true
+                    sourcesSwipeRefreshLayout.isVisible = false
+                    sourcesProgressBar.isVisible = false
+                }
+
+                is SourcesUiState.Error -> {} // TODO(Navigate to ErrorFragment)
+            }
         }
     }
 
-    private fun collectSourcesByQuery() {
-        collectFlow(sourcesViewModel.sourcesByQuery) { sources ->
-            sourcesByQueryAdapter.submitList(sources)
+    private fun setupSwipeToRefresh() = with(binding) {
+        sourcesSwipeRefreshLayout.setOnRefreshListener {
+            sourcesViewModel.onEvent(SourcesEvent.OnUpdateSources)
         }
     }
 
