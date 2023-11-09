@@ -6,12 +6,17 @@ import androidx.lifecycle.viewModelScope
 import com.skid.sources.model.Source
 import com.skid.sources.repository.SourcesRepository
 import com.skid.sources.usecase.GetSourcesByQueryUseCase
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 
+@OptIn(FlowPreview::class)
 class SourcesViewModel @Inject constructor(
     private val sourcesRepository: SourcesRepository,
     private val getSourcesByQueryUseCase: GetSourcesByQueryUseCase,
@@ -20,8 +25,17 @@ class SourcesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<SourcesUiState>(SourcesUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
+    private val query = MutableSharedFlow<String>(replay = 1)
+
     init {
         onEvent(SourcesEvent.OnUpdateSources)
+
+        viewModelScope.launch {
+            query
+                .debounce(300)
+                .distinctUntilChanged()
+                .collect { onEvent(SourcesEvent.OnSearchByQuery(it)) }
+        }
     }
 
     fun onEvent(event: SourcesEvent) {
@@ -34,6 +48,11 @@ class SourcesViewModel @Inject constructor(
             }
 
             is SourcesEvent.OnSearchByQuery -> searchByQuery(event.query)
+            is SourcesEvent.OnQueryChanged -> {
+                viewModelScope.launch {
+                    query.emit(event.query)
+                }
+            }
         }
     }
 
@@ -79,5 +98,5 @@ sealed class SourcesEvent {
 
     data object OnUpdateSources : SourcesEvent()
     data class OnSearchByQuery(val query: String) : SourcesEvent()
-
+    data class OnQueryChanged(val query: String) : SourcesEvent()
 }

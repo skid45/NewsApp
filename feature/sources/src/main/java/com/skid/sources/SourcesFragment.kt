@@ -107,7 +107,7 @@ class SourcesFragment : Fragment() {
 
                     override fun onQueryTextChange(newText: String?): Boolean {
                         if (newText != null) {
-                            sourcesViewModel.onEvent(SourcesEvent.OnSearchByQuery(newText))
+                            sourcesViewModel.onEvent(SourcesEvent.OnQueryChanged(newText))
                         }
                         return true
                     }
