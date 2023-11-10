@@ -9,13 +9,7 @@ class GetSourcesByQueryUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(query: String): Result<List<Source>> {
-        if (query.isBlank()) return Result.success(emptyList())
-
-        val result = sourcesRepository.getSources()
-        return if (result.isSuccess) {
-            Result.success(result.getOrThrow().filter { source ->
-                source.name.contains(query, ignoreCase = true)
-            })
-        } else result
+        return if (query.isBlank()) Result.success(emptyList())
+        else sourcesRepository.getSources(refresh = false, query = query)
     }
 }

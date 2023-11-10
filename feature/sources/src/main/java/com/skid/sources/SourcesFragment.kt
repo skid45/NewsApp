@@ -113,7 +113,7 @@ class SourcesFragment : Fragment() {
 
                     override fun onQueryTextChange(newText: String?): Boolean {
                         if (newText != null) {
-                            sourcesViewModel.onEvent(SourcesEvent.OnQueryChanged(newText))
+                            sourcesViewModel.onEvent(SourcesEvent.OnSearchByQuery(newText))
                         }
                         return true
                     }
@@ -122,7 +122,6 @@ class SourcesFragment : Fragment() {
             searchItem.setOnActionExpandListener(
                 object : MenuItem.OnActionExpandListener {
                     override fun onMenuItemActionExpand(p0: MenuItem): Boolean {
-                        sourcesViewModel.onEvent(SourcesEvent.OnSearchByQuery(""))
                         return true
                     }
 

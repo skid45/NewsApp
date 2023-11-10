@@ -7,75 +7,45 @@ import com.skid.filters.repository.FiltersRepository
 import com.skid.sources.model.Source
 import com.skid.sources.repository.SourcesRepository
 import com.skid.sources.usecase.GetSourcesByQueryUseCase
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 
-@OptIn(FlowPreview::class)
 class SourcesViewModel @Inject constructor(
     private val sourcesRepository: SourcesRepository,
     private val getSourcesByQueryUseCase: GetSourcesByQueryUseCase,
-    private val filtersRepository: FiltersRepository
+    private val filtersRepository: FiltersRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<SourcesUiState>(SourcesUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
-    private val _query = MutableSharedFlow<String>(replay = 1)
-    private val query = _query
-        .debounce(100)
-        .distinctUntilChanged()
-        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 1)
-
     init {
         onEvent(SourcesEvent.OnUpdateSources)
-
-        viewModelScope.launch {
-            query.collect { onEvent(SourcesEvent.OnSearchByQuery(it)) }
-        }
     }
 
     fun onEvent(event: SourcesEvent) {
         when (event) {
             SourcesEvent.OnUpdateSources -> {
-                viewModelScope.launch {
-                    _uiState.value =
-                        when (uiState.value) {
-                            is SourcesUiState.Success -> SourcesUiState.Refresh
-                            is SourcesUiState.Search -> {
-                                delay(100)
-                                SourcesUiState.Loading
-                            }
-
-                            else -> SourcesUiState.Loading
-                        }
+                _uiState.value = when (uiState.value) {
+                    is SourcesUiState.Success -> SourcesUiState.Refresh
+                    else -> SourcesUiState.Loading
                 }
-
                 updateSources()
             }
 
             is SourcesEvent.OnSearchByQuery -> searchByQuery(event.query)
-            is SourcesEvent.OnQueryChanged -> {
-                viewModelScope.launch {
-                    _query.emit(event.query)
-                }
-            }
+
         }
     }
 
     private fun updateSources() {
         viewModelScope.launch {
             filtersRepository.getLanguage().collect { language ->
-                val result = sourcesRepository.getSources(language?.apiName)
+                val result = sourcesRepository
+                    .getSources(language = language?.apiName)
                 _uiState.value =
                     if (result.isSuccess) SourcesUiState.Success(result.getOrThrow())
                     else SourcesUiState.Error(result.exceptionOrNull()?.localizedMessage ?: "")
@@ -116,5 +86,4 @@ sealed class SourcesEvent {
 
     data object OnUpdateSources : SourcesEvent()
     data class OnSearchByQuery(val query: String) : SourcesEvent()
-    data class OnQueryChanged(val query: String) : SourcesEvent()
 }

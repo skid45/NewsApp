@@ -1,5 +1,6 @@
 package com.skid.sources.mapper
 
+import com.skid.database.sources.model.SourceEntity
 import com.skid.network.model.SourceDTO
 import com.skid.sources.model.Source
 import com.skid.ui.R
@@ -11,6 +12,27 @@ fun SourceDTO.toSource(): Source {
         name = name,
         category = category.replaceFirstChar { it.uppercase() },
         country = country.getCountryName(),
+        drawableResId = drawableMap[name] ?: R.drawable.source_photo_stub
+    )
+}
+
+
+fun SourceDTO.toSourceEntity(): SourceEntity {
+    return SourceEntity(
+        id = id,
+        name = name,
+        category = category.replaceFirstChar { it.uppercase() },
+        country = country.getCountryName(),
+        language = language
+    )
+}
+
+fun SourceEntity.toSource(): Source {
+    return Source(
+        id = id,
+        name = name,
+        category = category,
+        country = country,
         drawableResId = drawableMap[name] ?: R.drawable.source_photo_stub
     )
 }
