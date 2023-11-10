@@ -32,9 +32,11 @@ class FiltersRepositoryImpl @Inject constructor(
                 )
             }
 
-    override fun getLanguages(): Flow<List<Language>> = filtersDataStorePreferencesManager
+    override fun getLanguages(): Flow<Language?> = filtersDataStorePreferencesManager
         .getLanguages()
-        .map { it?.map(Language::valueOf) ?: emptyList() }
+        .map { language ->
+            language ?: return@map null
+            Language.valueOf(language) }
 
     override fun getNumberOfFilters(): Flow<Int> = filtersDataStorePreferencesManager
         .getNumberOfFilters()
@@ -43,7 +45,7 @@ class FiltersRepositoryImpl @Inject constructor(
     override suspend fun saveFilters(
         sortBy: Sorting,
         chosenDates: Pair<Calendar, Calendar>?,
-        languages: List<Language>,
+        language: Language?,
         numberOfFilters: Int,
     ) {
         filtersDataStorePreferencesManager.saveFilters(
@@ -51,7 +53,7 @@ class FiltersRepositoryImpl @Inject constructor(
             chosenDates = if (chosenDates != null) {
                 chosenDates.first.timeInMillis to chosenDates.second.timeInMillis
             } else null,
-            languages = languages.map(Language::name).toSet(),
+            language = language?.name,
             numberOfFilters = numberOfFilters
         )
     }

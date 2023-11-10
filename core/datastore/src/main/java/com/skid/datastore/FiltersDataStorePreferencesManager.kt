@@ -27,9 +27,13 @@ class FiltersDataStorePreferencesManager @Inject constructor(
             else startDate to endDate
         }
 
-    fun getLanguages(): Flow<Set<String>?> = filtersDataStore
+    fun getLanguages(): Flow<String?> = filtersDataStore
         .data
-        .map { it[FiltersPreferencesKeys.LANGUAGES] }
+        .map { filters ->
+            val language = filters[FiltersPreferencesKeys.LANGUAGE]
+            if (language == "null") null
+            else language
+        }
 
     fun getNumberOfFilters(): Flow<Int?> = filtersDataStore
         .data
@@ -38,14 +42,14 @@ class FiltersDataStorePreferencesManager @Inject constructor(
     suspend fun saveFilters(
         sortBy: String,
         chosenDates: Pair<Long, Long>?,
-        languages: Set<String>,
+        language: String?,
         numberOfFilters: Int,
     ) {
         filtersDataStore.edit { filters ->
             filters[FiltersPreferencesKeys.SORT_BY] = sortBy
             filters[FiltersPreferencesKeys.START_DATE] = chosenDates?.first ?: Long.MIN_VALUE
             filters[FiltersPreferencesKeys.END_DATE] = chosenDates?.second ?: Long.MIN_VALUE
-            filters[FiltersPreferencesKeys.LANGUAGES] = languages
+            filters[FiltersPreferencesKeys.LANGUAGE] = language.toString()
             filters[FiltersPreferencesKeys.NUMBER_OF_FILTERS] = numberOfFilters
         }
     }

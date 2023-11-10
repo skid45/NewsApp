@@ -118,18 +118,14 @@ class FiltersFragment : Fragment() {
     }
 
     private fun setupChipsGroup() = with(binding) {
-        filtersChipsGroup.setOnCheckedStateChangeListener { group, _ ->
-            val selectedLanguages = group.children
-                .filter { (it as Chip).isChecked }
-                .map { chip ->
-                    chip as Chip
-                    Language.values().first { language ->
-                        language.title == chip.text.toString()
-                    }
-                }
-                .toList()
-
-            filtersViewModel.onEvent(FiltersEvent.OnLanguagesChanged(selectedLanguages))
+        filtersChipsGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            if (checkedIds.isEmpty()) {
+                filtersViewModel.onEvent(FiltersEvent.OnLanguageChanged(null))
+            } else {
+                val chip = group.findViewById<Chip>(checkedIds.first())
+                val checkedLanguage = Language.values().first { it.title == chip.text.toString() }
+                filtersViewModel.onEvent(FiltersEvent.OnLanguageChanged(checkedLanguage))
+            }
         }
     }
 
@@ -180,7 +176,7 @@ class FiltersFragment : Fragment() {
                 filtersChooseDateTextView.setTextColor(ColorStateList.valueOf(primaryColor))
             }
 
-            uiState.languages.forEach { language ->
+            uiState.language?.let { language ->
                 filtersChipsGroup.children.forEach { chip ->
                     chip as Chip
                     if (chip.text.toString() == language.title) filtersChipsGroup.check(chip.id)

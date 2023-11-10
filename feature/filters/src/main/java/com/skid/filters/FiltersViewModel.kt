@@ -30,11 +30,11 @@ class FiltersViewModel @Inject constructor(
                     getChosenDates(),
                     getLanguages(),
                     getNumberOfFilters()
-                ) { sortBy, chosenDates, languages, numberOfFilters ->
+                ) { sortBy, chosenDates, language, numberOfFilters ->
                     FiltersUiState(
                         sortBy = sortBy,
                         chosenDates = chosenDates,
-                        languages = languages,
+                        language = language,
                         numberOfFilters = numberOfFilters
                     )
                 }.collect { _uiState.value = it }
@@ -54,8 +54,8 @@ class FiltersViewModel @Inject constructor(
                 _uiState.value = newState
             }
 
-            is FiltersEvent.OnLanguagesChanged -> {
-                val newState = uiState.value?.copy(languages = event.languages)
+            is FiltersEvent.OnLanguageChanged -> {
+                val newState = uiState.value?.copy(language = event.language)
                 _uiState.value = newState
             }
 
@@ -65,7 +65,7 @@ class FiltersViewModel @Inject constructor(
                         filtersRepository.saveFilters(
                             sortBy = uiState.sortBy,
                             chosenDates = uiState.chosenDates,
-                            languages = uiState.languages,
+                            language = uiState.language,
                             numberOfFilters = calculateNumberOfFilters()
                         )
                     }
@@ -79,7 +79,7 @@ class FiltersViewModel @Inject constructor(
         uiState.value?.let { uiState ->
             if (uiState.sortBy != Sorting.NEW) numberOfFilters++
             if (uiState.chosenDates != null) numberOfFilters++
-            if (uiState.languages.isNotEmpty()) numberOfFilters++
+            if (uiState.language != null) numberOfFilters++
         }
         return numberOfFilters
     }
@@ -99,13 +99,13 @@ class FiltersViewModel @Inject constructor(
 data class FiltersUiState(
     val sortBy: Sorting = Sorting.NEW,
     val chosenDates: Pair<Calendar, Calendar>? = null,
-    val languages: List<Language> = emptyList(),
+    val language: Language? = null,
     @IntRange(0, 3) val numberOfFilters: Int = 0,
 )
 
 sealed class FiltersEvent {
     data class OnSortByChanged(val sortBy: Sorting) : FiltersEvent()
     data class OnChosenDatesChanged(val chosenDates: Pair<Calendar, Calendar>?) : FiltersEvent()
-    data class OnLanguagesChanged(val languages: List<Language>) : FiltersEvent()
+    data class OnLanguageChanged(val language: Language?) : FiltersEvent()
     data object SaveFilters : FiltersEvent()
 }
