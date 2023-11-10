@@ -9,7 +9,7 @@ interface FiltersRepository {
 
     fun getSortBy(): Flow<Sorting>
     fun getChosenDates(): Flow<Pair<Calendar, Calendar>?>
-    fun getLanguages(): Flow<Language?>
+    fun getLanguage(): Flow<Language?>
     fun getNumberOfFilters(): Flow<Int>
 
     suspend fun saveFilters(

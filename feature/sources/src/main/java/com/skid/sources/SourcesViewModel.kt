@@ -3,6 +3,7 @@ package com.skid.sources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.skid.filters.repository.FiltersRepository
 import com.skid.sources.model.Source
 import com.skid.sources.repository.SourcesRepository
 import com.skid.sources.usecase.GetSourcesByQueryUseCase
@@ -23,6 +24,7 @@ import javax.inject.Provider
 class SourcesViewModel @Inject constructor(
     private val sourcesRepository: SourcesRepository,
     private val getSourcesByQueryUseCase: GetSourcesByQueryUseCase,
+    private val filtersRepository: FiltersRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<SourcesUiState>(SourcesUiState.Loading)
@@ -57,6 +59,7 @@ class SourcesViewModel @Inject constructor(
                             else -> SourcesUiState.Loading
                         }
                 }
+
                 updateSources()
             }
 
@@ -71,10 +74,12 @@ class SourcesViewModel @Inject constructor(
 
     private fun updateSources() {
         viewModelScope.launch {
-            val result = sourcesRepository.getSources()
-            _uiState.value =
-                if (result.isSuccess) SourcesUiState.Success(result.getOrThrow())
-                else SourcesUiState.Error(result.exceptionOrNull()?.localizedMessage ?: "")
+            filtersRepository.getLanguage().collect { language ->
+                val result = sourcesRepository.getSources(language?.apiName)
+                _uiState.value =
+                    if (result.isSuccess) SourcesUiState.Success(result.getOrThrow())
+                    else SourcesUiState.Error(result.exceptionOrNull()?.localizedMessage ?: "")
+            }
         }
     }
 

@@ -63,6 +63,7 @@ dependencies {
     implementation(project(":core:utils"))
 
     implementation(project(":data:sources"))
+    implementation(project(":data:filters"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

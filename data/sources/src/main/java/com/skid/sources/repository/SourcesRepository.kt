@@ -5,5 +5,5 @@ import com.skid.sources.model.Source
 
 interface SourcesRepository {
 
-    suspend fun getSources(): Result<List<Source>>
+    suspend fun getSources(language: String? = null): Result<List<Source>>
 }

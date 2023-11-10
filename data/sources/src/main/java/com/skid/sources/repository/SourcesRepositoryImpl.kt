@@ -15,9 +15,9 @@ class SourcesRepositoryImpl @Inject constructor(
     private val resourceWrapper: ResourceWrapper,
 ) : SourcesRepository {
 
-    override suspend fun getSources(): Result<List<Source>> {
+    override suspend fun getSources(language: String?): Result<List<Source>> {
         return try {
-            val response = sourcesService.getSources()
+            val response = sourcesService.getSources(language)
             if (response.isSuccessful) {
                 Result.success(response.body()!!.sources.map(SourceDTO::toSource))
             } else {

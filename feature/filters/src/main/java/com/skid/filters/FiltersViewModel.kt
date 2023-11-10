@@ -28,7 +28,7 @@ class FiltersViewModel @Inject constructor(
                 combine(
                     getSortBy(),
                     getChosenDates(),
-                    getLanguages(),
+                    getLanguage(),
                     getNumberOfFilters()
                 ) { sortBy, chosenDates, language, numberOfFilters ->
                     FiltersUiState(

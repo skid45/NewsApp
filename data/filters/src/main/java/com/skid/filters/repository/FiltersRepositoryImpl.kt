@@ -32,7 +32,7 @@ class FiltersRepositoryImpl @Inject constructor(
                 )
             }
 
-    override fun getLanguages(): Flow<Language?> = filtersDataStorePreferencesManager
+    override fun getLanguage(): Flow<Language?> = filtersDataStorePreferencesManager
         .getLanguages()
         .map { language ->
             language ?: return@map null

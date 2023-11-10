@@ -1,5 +1,6 @@
 package com.skid.sources.di
 
+import com.skid.filters.repository.FiltersRepository
 import com.skid.sources.SourcesFragment
 import com.skid.sources.repository.SourcesRepository
 import dagger.Component
@@ -20,6 +21,7 @@ internal interface SourcesComponent {
 interface SourcesDeps {
 
     val sourcesRepository: SourcesRepository
+    val filtersRepository: FiltersRepository
 }
 
 interface SourcesDepsProvider {
