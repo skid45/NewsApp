@@ -7,11 +7,14 @@ import com.skid.sources.model.Source
 import com.skid.sources.repository.SourcesRepository
 import com.skid.sources.usecase.GetSourcesByQueryUseCase
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
@@ -25,32 +28,42 @@ class SourcesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<SourcesUiState>(SourcesUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
-    private val query = MutableSharedFlow<String>(replay = 1)
+    private val _query = MutableSharedFlow<String>(replay = 1)
+    private val query = _query
+        .debounce(100)
+        .distinctUntilChanged()
+        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 1)
 
     init {
         onEvent(SourcesEvent.OnUpdateSources)
 
         viewModelScope.launch {
-            query
-                .debounce(300)
-                .distinctUntilChanged()
-                .collect { onEvent(SourcesEvent.OnSearchByQuery(it)) }
+            query.collect { onEvent(SourcesEvent.OnSearchByQuery(it)) }
         }
     }
 
     fun onEvent(event: SourcesEvent) {
         when (event) {
             SourcesEvent.OnUpdateSources -> {
-                _uiState.value =
-                    if (uiState.value is SourcesUiState.Success) SourcesUiState.Refresh
-                    else SourcesUiState.Loading
+                viewModelScope.launch {
+                    _uiState.value =
+                        when (uiState.value) {
+                            is SourcesUiState.Success -> SourcesUiState.Refresh
+                            is SourcesUiState.Search -> {
+                                delay(100)
+                                SourcesUiState.Loading
+                            }
+
+                            else -> SourcesUiState.Loading
+                        }
+                }
                 updateSources()
             }
 
             is SourcesEvent.OnSearchByQuery -> searchByQuery(event.query)
             is SourcesEvent.OnQueryChanged -> {
                 viewModelScope.launch {
-                    query.emit(event.query)
+                    _query.emit(event.query)
                 }
             }
         }
@@ -91,7 +104,7 @@ sealed class SourcesUiState {
     data object Loading : SourcesUiState()
     data class Success(val sources: List<Source>) : SourcesUiState()
     data class Error(val message: String) : SourcesUiState()
-    data class Search(val sourcesByQuery: List<Source>) : SourcesUiState()
+    data class Search(val sourcesByQuery: List<Source> = emptyList()) : SourcesUiState()
 }
 
 sealed class SourcesEvent {

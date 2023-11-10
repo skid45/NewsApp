@@ -1,10 +1,11 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
 }
 
 android {
-    namespace = "com.skid.ui"
+    namespace = "com.skid.saved"
     compileSdk = 34
 
     defaultConfig {
@@ -41,6 +42,22 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
+
+    val daggerVersion = "2.48.1"
+    implementation("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+
+    val ciceroneVersion = "7.1"
+    implementation("com.github.terrakok:cicerone:$ciceroneVersion")
+
+    val fragmentVersion = "1.6.2"
+    implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
+
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    implementation(project(":core:ui"))
+    implementation(project(":core:utils"))
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

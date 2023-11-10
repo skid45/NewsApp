@@ -22,7 +22,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skid.sources.databinding.FragmentSourcesBinding
+import com.skid.sources.databinding.SourcesItemBinding
 import com.skid.sources.di.SourcesComponentViewModel
+import com.skid.ui.createAdapter
 import com.skid.utils.collectFlow
 import javax.inject.Inject
 import javax.inject.Provider
@@ -36,17 +38,9 @@ class SourcesFragment : Fragment() {
     lateinit var viewModelProvider: Provider<SourcesViewModel.Factory>
     private val sourcesViewModel: SourcesViewModel by activityViewModels { viewModelProvider.get() }
 
-    private val sourcesAdapter by lazy {
-        SourcesAdapter { sourceItem ->
-            // TODO(navigate to articles from source)
-        }
-    }
+    private val sourcesAdapter by lazy { createSourcesAdapter() }
 
-    private val sourcesByQueryAdapter by lazy {
-        SourcesAdapter { sourceItem ->
-            // TODO(navigate to articles from source)
-        }
-    }
+    private val sourcesByQueryAdapter by lazy { createSourcesAdapter() }
 
     override fun onAttach(context: Context) {
         ViewModelProvider(this)
@@ -90,6 +84,18 @@ class SourcesFragment : Fragment() {
         )
     }
 
+    private fun createSourcesAdapter() = createAdapter(
+        binding = { inflater, parent -> SourcesItemBinding.inflate(inflater, parent, false) },
+        bind = { source ->
+            root.setOnClickListener { } // TODO(navigate to articles from source)
+            sourcesItemName.text = source.name
+            sourcesItemCategory.text = source.category
+            sourcesItemCountry.text = source.country
+            sourcesItemImage.setImageResource(source.drawableResId)
+        },
+        diffCallback = SourcesDiffCallback()
+    )
+
     private fun setupToolbar() {
         (requireActivity() as AppCompatActivity).supportActionBar?.title =
             getString(com.skid.ui.R.string.sources)
@@ -115,7 +121,10 @@ class SourcesFragment : Fragment() {
             )
             searchItem.setOnActionExpandListener(
                 object : MenuItem.OnActionExpandListener {
-                    override fun onMenuItemActionExpand(p0: MenuItem): Boolean = true
+                    override fun onMenuItemActionExpand(p0: MenuItem): Boolean {
+                        sourcesViewModel.onEvent(SourcesEvent.OnSearchByQuery(""))
+                        return true
+                    }
 
                     override fun onMenuItemActionCollapse(p0: MenuItem): Boolean {
                         sourcesViewModel.onEvent(SourcesEvent.OnUpdateSources)
