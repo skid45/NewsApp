@@ -1,10 +1,10 @@
 package com.skid.newsapp.di.module
 
-import android.content.Context
-import androidx.room.Room
 import com.skid.database.sources.dao.SourcesDao
-import com.skid.database.sources.database.SourcesDatabase
+import com.skid.database.sources.database.NewsAppDatabase
 import com.skid.network.service.SourcesService
+import com.skid.newsapp.ui.navigation.SourcesRouterImpl
+import com.skid.sources.SourcesRouter
 import com.skid.sources.repository.SourcesRepository
 import com.skid.sources.repository.SourcesRepositoryImpl
 import dagger.Binds
@@ -19,6 +19,9 @@ interface SourcesModule {
     @[Binds Singleton]
     fun bindSourcesRepository(sourcesRepositoryImpl: SourcesRepositoryImpl): SourcesRepository
 
+    @[Binds Singleton]
+    fun bindSourcesRouter(sourcesRouterImpl: SourcesRouterImpl): SourcesRouter
+
     companion object {
 
         @[Provides Singleton]
@@ -27,13 +30,6 @@ interface SourcesModule {
         }
 
         @[Provides Singleton]
-        fun provideSourcesDatabase(context: Context): SourcesDatabase {
-            return Room.databaseBuilder(context, SourcesDatabase::class.java, "sources_db")
-                .fallbackToDestructiveMigration()
-                .build()
-        }
-
-        @[Provides Singleton]
-        fun provideSourcesDao(database: SourcesDatabase): SourcesDao = database.getSourcesDao()
+        fun provideSourcesDao(database: NewsAppDatabase): SourcesDao = database.getSourcesDao()
     }
 }

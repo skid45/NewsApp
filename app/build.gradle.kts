@@ -61,6 +61,7 @@ dependencies {
     val retrofitVersion = "2.9.0"
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+    implementation("com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion")
 
     val ciceroneVersion = "7.1"
     implementation("com.github.terrakok:cicerone:$ciceroneVersion")
@@ -79,6 +80,10 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
 
+    val rxJavaVersion = "3.1.8"
+    implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+
     // Core modules
     implementation(project(":core:datastore"))
     implementation(project(":core:database"))
@@ -89,10 +94,14 @@ dependencies {
     // Data modules
     implementation(project(":data:filters"))
     implementation(project(":data:sources"))
+    implementation(project(":data:news"))
 
     // Feature modules
     implementation(project(":feature:filters"))
     implementation(project(":feature:sources"))
+    implementation(project(":feature:newslistbysource"))
+
+    implementation(project(":paging"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -22,4 +22,5 @@
     <string name="choose_date_button">Choose date button</string>
     <string name="select_date">Select date</string>
     <string name="article_image">Article image</string>
+    <string name="too_many_requests_try_later">Too many requests\nTry later</string>
 </resources>

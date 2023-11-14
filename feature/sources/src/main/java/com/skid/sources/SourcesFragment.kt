@@ -38,6 +38,9 @@ class SourcesFragment : Fragment() {
     lateinit var viewModelProvider: Provider<SourcesViewModel.Factory>
     private val sourcesViewModel: SourcesViewModel by activityViewModels { viewModelProvider.get() }
 
+    @Inject
+    lateinit var sourcesRouter: SourcesRouter
+
     private val sourcesAdapter by lazy { createSourcesAdapter() }
 
     private val sourcesByQueryAdapter by lazy { createSourcesAdapter() }
@@ -87,7 +90,7 @@ class SourcesFragment : Fragment() {
     private fun createSourcesAdapter() = createAdapter(
         binding = { inflater, parent -> SourcesItemBinding.inflate(inflater, parent, false) },
         bind = { source ->
-            root.setOnClickListener { } // TODO(navigate to articles from source)
+            root.setOnClickListener { sourcesRouter.navigateToNewsListBySource(source.id, source.name) }
             sourcesItemName.text = source.name
             sourcesItemCategory.text = source.category
             sourcesItemCountry.text = source.country
