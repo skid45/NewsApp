@@ -2,9 +2,12 @@ package com.skid.newsapp.ui.navigation
 
 import androidx.core.os.bundleOf
 import com.github.terrakok.cicerone.androidx.FragmentScreen
+import com.skid.article.ArticleFragment
 import com.skid.filters.FiltersFragment
+import com.skid.news.model.Article
 import com.skid.newslistbysource.NewsListBySourceFragment
 import com.skid.sources.SourcesFragment
+import com.skid.utils.Constants.ARTICLE_KEY
 import com.skid.utils.Constants.SOURCE_ID_KEY
 import com.skid.utils.Constants.SOURCE_NAME_KEY
 
@@ -19,6 +22,12 @@ object Screens {
                 SOURCE_ID_KEY to sourceId,
                 SOURCE_NAME_KEY to sourceName
             )
+        }
+    }
+
+    fun ArticleProfileScreen(article: Article) = FragmentScreen {
+        ArticleFragment().apply {
+            arguments = bundleOf(ARTICLE_KEY to article)
         }
     }
 }

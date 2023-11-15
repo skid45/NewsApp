@@ -1,6 +1,8 @@
 package com.skid.utils
 
 import android.content.Context
+import android.os.Build
+import android.os.Bundle
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -101,5 +104,14 @@ fun <T : Any> Flow<T?>.asObservable(ifNull: () -> T): Observable<T> {
         }.onCompletion {
             emitter.onComplete()
         }.launchIn(CoroutineScope(Dispatchers.Default))
+    }
+}
+
+@Suppress("DEPRECATION")
+inline fun <reified T : Serializable> Bundle.customGetSerializable(key: String): T? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        getSerializable(key, T::class.java)
+    } else {
+        getSerializable(key) as? T
     }
 }

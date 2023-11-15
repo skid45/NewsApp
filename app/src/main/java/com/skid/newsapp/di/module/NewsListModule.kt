@@ -9,11 +9,11 @@ import dagger.Provides
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
-@Module
+@Module(includes = [NewsListBySourceModule::class])
 interface NewsListModule {
 
     @[Binds Singleton]
-    fun bindNewRepository(impl: NewsRepositoryImpl): NewsRepository
+    fun bindNewsRepository(impl: NewsRepositoryImpl): NewsRepository
 
     companion object {
 

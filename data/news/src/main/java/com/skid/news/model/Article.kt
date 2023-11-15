@@ -1,6 +1,7 @@
 package com.skid.news.model
 
 import androidx.annotation.DrawableRes
+import java.io.Serializable
 import java.util.Calendar
 
 data class Article(
@@ -12,4 +13,4 @@ data class Article(
     val imageUrl: String,
     val sourceName: String,
     @DrawableRes val sourceDrawableId: Int
-)
+) : Serializable

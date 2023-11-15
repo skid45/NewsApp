@@ -42,6 +42,9 @@ class NewsListBySourceFragment : Fragment() {
     lateinit var viewModelProvider: Provider<NewsListBySourceViewModel.Factory>
     private val newsListBySourceViewModel: NewsListBySourceViewModel by viewModels { viewModelProvider.get() }
 
+    @Inject
+    lateinit var router: NewsListBySourceRouter
+
     private val disposables = CompositeDisposable()
     private var searchDisposable: Disposable? = null
 
@@ -52,6 +55,7 @@ class NewsListBySourceFragment : Fragment() {
                 ArticleItemBinding.inflate(layoutInflater, parent, false)
             },
             bind = { article ->
+                root.setOnClickListener { router.toArticleProfile(article) }
                 articleItemImage.load(article.imageUrl) {
                     crossfade(true)
                 }
@@ -69,6 +73,7 @@ class NewsListBySourceFragment : Fragment() {
                 ArticleItemBinding.inflate(layoutInflater, parent, false)
             },
             bind = { article ->
+                root.setOnClickListener { router.toArticleProfile(article) }
                 articleItemImage.load(article.imageUrl) {
                     crossfade(true)
                 }

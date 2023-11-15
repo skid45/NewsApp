@@ -13,6 +13,7 @@ import com.skid.newsapp.di.module.NewsListModule
 import com.skid.newsapp.di.module.ResourceModule
 import com.skid.newsapp.di.module.SourcesModule
 import com.skid.newsapp.ui.MainActivity
+import com.skid.newslistbysource.NewsListBySourceRouter
 import com.skid.newslistbysource.di.NewsListBySourceDeps
 import com.skid.sources.SourcesRouter
 import com.skid.sources.di.SourcesDeps
@@ -42,6 +43,8 @@ interface AppComponent : SourcesDeps, FiltersDeps, NewsListBySourceDeps, Article
     override val newsRepository: NewsRepository
 
     override val sourcesRouter: SourcesRouter
+
+    override val newsListBySourceRouter: NewsListBySourceRouter
 
     fun inject(activity: MainActivity)
 

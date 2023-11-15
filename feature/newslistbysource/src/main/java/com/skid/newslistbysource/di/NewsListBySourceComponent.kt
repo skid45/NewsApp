@@ -3,6 +3,7 @@ package com.skid.newslistbysource.di
 import com.skid.filters.repository.FiltersRepository
 import com.skid.news.repository.NewsRepository
 import com.skid.newslistbysource.NewsListBySourceFragment
+import com.skid.newslistbysource.NewsListBySourceRouter
 import dagger.Component
 import kotlin.properties.Delegates.notNull
 
@@ -22,6 +23,7 @@ interface NewsListBySourceDeps {
 
     val newsRepository: NewsRepository
     val filtersRepository: FiltersRepository
+    val newsListBySourceRouter: NewsListBySourceRouter
 }
 
 interface NewsListBySourceDepsProvider {
