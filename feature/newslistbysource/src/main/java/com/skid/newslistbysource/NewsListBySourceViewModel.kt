@@ -7,6 +7,7 @@ import com.skid.filters.model.Sorting
 import com.skid.filters.repository.FiltersRepository
 import com.skid.news.model.Article
 import com.skid.news.repository.NewsRepository
+import com.skid.news.usecase.GetNewsBySourcePagingSourceWithQueryUseCase
 import com.skid.paging.Pager
 import com.skid.utils.Constants.PAGE_SIZE
 import com.skid.utils.asObservable
@@ -21,6 +22,7 @@ import javax.inject.Provider
 class NewsListBySourceViewModel @Inject constructor(
     private val newsRepository: NewsRepository,
     filtersRepository: FiltersRepository,
+    private val getNewsBySourcePagingSourceWithQueryUseCase: GetNewsBySourcePagingSourceWithQueryUseCase,
 ) : ViewModel() {
 
     private val disposables = CompositeDisposable()
@@ -46,16 +48,39 @@ class NewsListBySourceViewModel @Inject constructor(
             },
             getLanguage().asObservable { Language.NULL }
         ) { source, sortBy, chosenDates, language ->
-            getNewPager(source, sortBy, chosenDates, language)
+            pager.onNext(
+                getNewPager(
+                    source = source,
+                    sortBy = sortBy,
+                    chosenDates = chosenDates,
+                    language = language
+                )
+            )
         }
     }
 
+    private val query = BehaviorSubject.create<String?>()
+
+    private val searchPager = BehaviorSubject
+        .createDefault(getNewPager(query = query.value, source = sourceId.value))
+
+    val searchPagerObservable = searchPager
+        .switchMap { pager -> pager.loadNextPage() }
+
+    private val combinedSearchPagerParameters = Observable
+        .combineLatest(query, sourceId) { query, source ->
+            searchPager.onNext(getNewPagerWithQuery(query = query, source = source))
+        }
+
     init {
-        val disposable = combinedParameters.subscribe { pager.onNext(it) }
+        val disposable = combinedParameters.subscribe()
+        val searchDisposable = combinedSearchPagerParameters.subscribe()
         disposables.add(disposable)
+        disposables.add(searchDisposable)
     }
 
     private fun getNewPager(
+        query: String? = null,
         source: String? = null,
         sortBy: Sorting? = null,
         chosenDates: Pair<Calendar, Calendar>? = null,
@@ -75,12 +100,26 @@ class NewsListBySourceViewModel @Inject constructor(
             initialPage = 1,
             pagingSourceFactory = {
                 newsRepository.newsBySourcePagingSource(
+                    query = query,
                     source = source,
                     sortBy = sortBy?.apiName,
                     from = newChosenDates?.first?.format("yyyy MM dd"),
                     to = newChosenDates?.second?.format("yyyy MM dd"),
                     language = newLanguage?.apiName
                 )
+            }
+        )
+    }
+
+    private fun getNewPagerWithQuery(
+        query: String? = null,
+        source: String? = null,
+    ): Pager<Article> {
+        return Pager(
+            pageSize = PAGE_SIZE,
+            initialPage = 1,
+            pagingSourceFactory = {
+                getNewsBySourcePagingSourceWithQueryUseCase(query = query, source = source)
             }
         )
     }
@@ -95,6 +134,14 @@ class NewsListBySourceViewModel @Inject constructor(
 
     fun onLoadNextPage() {
         pager.onNext(pager.value)
+    }
+
+    fun onLoadNextPageForSearch() {
+        searchPager.onNext(searchPager.value)
+    }
+
+    fun onQueryChanged(query: String?) {
+        this.query.onNext(query)
     }
 
     override fun onCleared() {

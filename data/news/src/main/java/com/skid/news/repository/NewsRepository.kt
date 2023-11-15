@@ -5,6 +5,7 @@ import com.skid.news.pagingsource.NewsBySourcePagingSource
 interface NewsRepository {
 
     fun newsBySourcePagingSource(
+        query: String?,
         source: String?,
         sortBy: String?,
         from: String?,

@@ -19,6 +19,7 @@ import java.io.IOException
 class NewsBySourcePagingSource @AssistedInject constructor(
     private val newsService: EverythingService,
     private val resourceWrapper: ResourceWrapper,
+    @Assisted("query") private val query: String?,
     @Assisted("source") private val source: String?,
     @Assisted("sortBy") private val sortBy: String?,
     @Assisted("from") private val from: String?,
@@ -28,6 +29,7 @@ class NewsBySourcePagingSource @AssistedInject constructor(
 
     override fun loadPage(pageSize: Int, pageNumber: Int): Single<LoadResult<Article>> {
         return newsService.getNewsBySource(
+            query = query,
             source = source,
             page = pageNumber,
             pageSize = pageSize,
@@ -72,6 +74,7 @@ class NewsBySourcePagingSource @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
+            @Assisted("query") query: String?,
             @Assisted("source") source: String?,
             @Assisted("sortBy") sortBy: String?,
             @Assisted("from") from: String?,

@@ -11,6 +11,7 @@ interface EverythingService {
 
     @GET("everything")
     fun getNewsBySource(
+        @Query("q") query: String? = null,
         @Query("sources") source: String? = null,
         @Query("page") @IntRange(from = 1) page: Int = 1,
         @Query("pageSize") @IntRange(1, MAX_PAGE_SIZE.toLong()) pageSize: Int = MAX_PAGE_SIZE,
