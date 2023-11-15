@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.skid.article.di.ArticleDepsStore
 import com.skid.filters.di.FiltersDepsStore
 import com.skid.newsapp.di.AppComponent
 import com.skid.newsapp.di.DaggerAppComponent
@@ -23,6 +24,7 @@ class NewsApplication : Application() {
         SourcesDepsStore.deps = appComponent
         FiltersDepsStore.deps = appComponent
         NewsListBySourceDepsStore.deps = appComponent
+        ArticleDepsStore.deps = appComponent
     }
 }
 

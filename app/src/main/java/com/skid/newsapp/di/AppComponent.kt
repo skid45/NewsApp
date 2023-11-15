@@ -1,6 +1,7 @@
 package com.skid.newsapp.di
 
 import android.content.Context
+import com.skid.article.di.ArticleDeps
 import com.skid.filters.di.FiltersDeps
 import com.skid.filters.repository.FiltersRepository
 import com.skid.news.repository.NewsRepository
@@ -32,7 +33,7 @@ import javax.inject.Singleton
         NewsListModule::class,
     ]
 )
-interface AppComponent : SourcesDeps, FiltersDeps, NewsListBySourceDeps {
+interface AppComponent : SourcesDeps, FiltersDeps, NewsListBySourceDeps, ArticleDeps {
 
     override val filtersRepository: FiltersRepository
 

@@ -100,6 +100,7 @@ dependencies {
     implementation(project(":feature:filters"))
     implementation(project(":feature:sources"))
     implementation(project(":feature:newslistbysource"))
+    implementation(project(":feature:article"))
 
     implementation(project(":paging"))
 
