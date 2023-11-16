@@ -5,12 +5,14 @@ import com.skid.article.di.ArticleDeps
 import com.skid.filters.di.FiltersDeps
 import com.skid.filters.repository.FiltersRepository
 import com.skid.news.repository.NewsRepository
+import com.skid.news.repository.SavedArticlesRepository
 import com.skid.newsapp.di.module.DatabaseModule
 import com.skid.newsapp.di.module.FiltersModule
 import com.skid.newsapp.di.module.NavigationModule
 import com.skid.newsapp.di.module.NetworkModule
 import com.skid.newsapp.di.module.NewsListModule
 import com.skid.newsapp.di.module.ResourceModule
+import com.skid.newsapp.di.module.SavedModule
 import com.skid.newsapp.di.module.SourcesModule
 import com.skid.newsapp.ui.MainActivity
 import com.skid.newslistbysource.NewsListBySourceRouter
@@ -32,6 +34,7 @@ import javax.inject.Singleton
         FiltersModule::class,
         SourcesModule::class,
         NewsListModule::class,
+        SavedModule::class,
     ]
 )
 interface AppComponent : SourcesDeps, FiltersDeps, NewsListBySourceDeps, ArticleDeps {
@@ -45,6 +48,8 @@ interface AppComponent : SourcesDeps, FiltersDeps, NewsListBySourceDeps, Article
     override val sourcesRouter: SourcesRouter
 
     override val newsListBySourceRouter: NewsListBySourceRouter
+
+    override val savedArticlesRepository: SavedArticlesRepository
 
     fun inject(activity: MainActivity)
 

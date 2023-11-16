@@ -1,6 +1,7 @@
 package com.skid.article.di
 
 import com.skid.article.ArticleFragment
+import com.skid.news.repository.SavedArticlesRepository
 import dagger.Component
 import kotlin.properties.Delegates.notNull
 
@@ -18,7 +19,7 @@ internal interface ArticleComponent {
 
 interface ArticleDeps {
 
-
+    val savedArticlesRepository: SavedArticlesRepository
 }
 
 interface ArticleDepsProvider {

@@ -10,9 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.text.toSpannable
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import coil.load
@@ -20,13 +22,23 @@ import com.skid.article.databinding.FragmentArticleBinding
 import com.skid.article.di.ArticleComponentViewModel
 import com.skid.news.model.Article
 import com.skid.utils.Constants.ARTICLE_KEY
+import com.skid.utils.collectFlow
 import com.skid.utils.customGetSerializable
 import com.skid.utils.format
+import javax.inject.Inject
+import javax.inject.Provider
 
 class ArticleFragment : Fragment() {
 
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = checkNotNull(_binding)
+
+    private val article
+        get() = checkNotNull(requireArguments().customGetSerializable<Article>(ARTICLE_KEY))
+
+    @Inject
+    lateinit var viewModelProvider: Provider<ArticleViewModel.Factory>
+    private val articleViewModel: ArticleViewModel by viewModels { viewModelProvider.get() }
 
     override fun onAttach(context: Context) {
         ViewModelProvider(this)
@@ -34,6 +46,7 @@ class ArticleFragment : Fragment() {
             .articleComponent
             .inject(this)
         super.onAttach(context)
+        articleViewModel.onUrlChanged(article.url)
     }
 
     override fun onResume() {
@@ -52,10 +65,9 @@ class ArticleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireArguments().customGetSerializable<Article>(ARTICLE_KEY)?.let { article ->
-            setupArticle(article)
-        }
+        setupArticle(article)
         setupToolbar()
+        setupIsSavedArticleCollector()
     }
 
     override fun onDestroyView() {
@@ -96,6 +108,26 @@ class ArticleFragment : Fragment() {
     private fun setupToolbar() = with(binding) {
         articleProfileToolbar.setNavigationOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        articleProfileToolbar.setOnMenuItemClickListener { menuItem ->
+            if (menuItem.itemId == R.id.article_profile_menu_save) {
+                if (articleViewModel.isArticleSaved.value) {
+                    articleViewModel.deleteArticle(article.url)
+                } else articleViewModel.saveArticle(article)
+                true
+            } else false
+        }
+    }
+
+    private fun setupIsSavedArticleCollector() = with(binding) {
+        collectFlow(articleViewModel.isArticleSaved) { isSaved ->
+            val menuItem = articleProfileToolbar.menu.findItem(R.id.article_profile_menu_save)
+            menuItem.icon = AppCompatResources.getDrawable(
+                requireContext(),
+                if (isSaved) com.skid.ui.R.drawable.ic_bookmark
+                else com.skid.ui.R.drawable.ic_bookmark_border
+            )
         }
     }
 
