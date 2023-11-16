@@ -1,15 +1,17 @@
 package com.skid.filters
 
+import android.util.Log
 import androidx.annotation.IntRange
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.skid.filters.model.Filters
 import com.skid.filters.model.Language
 import com.skid.filters.model.Sorting
 import com.skid.filters.repository.FiltersRepository
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -24,21 +26,16 @@ class FiltersViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            with(filtersRepository) {
-                combine(
-                    getSortBy(),
-                    getChosenDates(),
-                    getLanguage(),
-                    getNumberOfFilters()
-                ) { sortBy, chosenDates, language, numberOfFilters ->
+            filtersRepository
+                .getFilters()
+                .map { filters ->
                     FiltersUiState(
-                        sortBy = sortBy,
-                        chosenDates = chosenDates,
-                        language = language,
-                        numberOfFilters = numberOfFilters
+                        sortBy = filters.sortBy,
+                        chosenDates = filters.chosenDates,
+                        language = filters.language,
+                        numberOfFilters = filters.numberOfFilters
                     )
                 }.collect { _uiState.value = it }
-            }
         }
     }
 
@@ -62,11 +59,14 @@ class FiltersViewModel @Inject constructor(
             is FiltersEvent.SaveFilters -> {
                 viewModelScope.launch {
                     uiState.value?.let { uiState ->
+                        Log.d("TAG", "onEvent: $uiState")
                         filtersRepository.saveFilters(
-                            sortBy = uiState.sortBy,
-                            chosenDates = uiState.chosenDates,
-                            language = uiState.language,
-                            numberOfFilters = calculateNumberOfFilters()
+                            Filters(
+                                sortBy = uiState.sortBy,
+                                chosenDates = uiState.chosenDates,
+                                language = uiState.language,
+                                numberOfFilters = calculateNumberOfFilters()
+                            )
                         )
                     }
                 }

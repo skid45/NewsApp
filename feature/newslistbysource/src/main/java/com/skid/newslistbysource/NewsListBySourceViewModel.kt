@@ -36,28 +36,20 @@ class NewsListBySourceViewModel @Inject constructor(
         .switchMap { pager -> pager.loadNextPage() }
         .cache()
 
-    private val combinedParameters = with(filtersRepository) {
-        Observable.combineLatest(
+    private val combinedParameters = Observable
+        .combineLatest(
             sourceId,
-            getSortBy().asObservable(),
-            getChosenDates().asObservable {
-                Pair(
-                    Calendar.getInstance().apply { timeInMillis = 0 },
-                    Calendar.getInstance().apply { timeInMillis = 0 }
-                )
-            },
-            getLanguage().asObservable { Language.NULL }
-        ) { source, sortBy, chosenDates, language ->
+            filtersRepository.getFilters().asObservable()
+        ) { source, filters ->
             pager.onNext(
                 getNewPager(
                     source = source,
-                    sortBy = sortBy,
-                    chosenDates = chosenDates,
-                    language = language
+                    sortBy = filters.sortBy,
+                    chosenDates = filters.chosenDates,
+                    language = filters.language
                 )
             )
         }
-    }
 
     private val query = BehaviorSubject.create<String?>()
 
@@ -86,15 +78,6 @@ class NewsListBySourceViewModel @Inject constructor(
         chosenDates: Pair<Calendar, Calendar>? = null,
         language: Language? = null,
     ): Pager<Article> {
-        val newChosenDates = if (chosenDates == Pair(
-                Calendar.getInstance().apply { timeInMillis = 0 },
-                Calendar.getInstance().apply { timeInMillis = 0 }
-            )
-        ) null
-        else chosenDates
-
-        val newLanguage = if (language == Language.NULL) null else language
-
         return Pager(
             pageSize = PAGE_SIZE,
             initialPage = 1,
@@ -103,9 +86,9 @@ class NewsListBySourceViewModel @Inject constructor(
                     query = query,
                     source = source,
                     sortBy = sortBy?.apiName,
-                    from = newChosenDates?.first?.format("yyyy MM dd"),
-                    to = newChosenDates?.second?.format("yyyy MM dd"),
-                    language = newLanguage?.apiName
+                    from = chosenDates?.first?.format("yyyy MM dd"),
+                    to = chosenDates?.second?.format("yyyy MM dd"),
+                    language = language?.apiName
                 )
             }
         )

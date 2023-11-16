@@ -90,7 +90,7 @@ class SavedFragment : Fragment() {
     private fun setupSavedArticlesCollect() = with(binding) {
         collectFlow(savedViewModel.savedArticles) { articles ->
             savedArticlesAdapter.submitList(articles)
-            savedSwipeRefreshLayout.isRefreshing = false
+
             savedSwipeRefreshLayout.isVisible = true
             savedProgressBar.isVisible = false
         }
@@ -98,7 +98,11 @@ class SavedFragment : Fragment() {
 
     private fun setupSwipeRefreshLayout() = with(binding) {
         savedSwipeRefreshLayout.setOnRefreshListener {
-            savedViewModel.updateArticles()
+            savedViewModel.onRefreshChanged(true)
+        }
+
+        collectFlow(savedViewModel.refresh) { refresh ->
+            savedSwipeRefreshLayout.isRefreshing = refresh
         }
     }
 

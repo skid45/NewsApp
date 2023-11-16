@@ -2,9 +2,6 @@ package com.skid.newsapp
 
 import android.app.Application
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import com.skid.article.di.ArticleDepsStore
 import com.skid.filters.di.FiltersDepsStore
 import com.skid.newsapp.di.AppComponent
@@ -12,7 +9,6 @@ import com.skid.newsapp.di.DaggerAppComponent
 import com.skid.newslistbysource.di.NewsListBySourceDepsStore
 import com.skid.saved.di.SavedDepsStore
 import com.skid.sources.di.SourcesDepsStore
-import com.skid.utils.Constants.FILTERS_PREFERENCES
 
 class NewsApplication : Application() {
 
@@ -35,5 +31,3 @@ val Context.appComponent: AppComponent
         is NewsApplication -> appComponent
         else -> (applicationContext as NewsApplication).appComponent
     }
-
-val Context.filtersDataStore: DataStore<Preferences> by preferencesDataStore(name = FILTERS_PREFERENCES)

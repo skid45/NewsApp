@@ -3,29 +3,38 @@ package com.skid.saved
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.skid.news.model.Article
+import com.skid.filters.repository.FiltersRepository
 import com.skid.news.repository.SavedArticlesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Provider
 
 class SavedViewModel @Inject constructor(
     private val savedArticlesRepository: SavedArticlesRepository,
+    filtersRepository: FiltersRepository,
 ) : ViewModel() {
 
-    private val _savedArticles = MutableStateFlow(emptyList<Article>())
-    val savedArticles = _savedArticles.asStateFlow()
+    private val _refresh = MutableStateFlow(false)
+    val refresh = _refresh.asStateFlow()
 
-    init {
-        updateArticles()
-    }
-
-    fun updateArticles() {
-        viewModelScope.launch {
-            _savedArticles.value = savedArticlesRepository.getAllArticles()
+    val savedArticles = filtersRepository
+        .getFilters()
+        .combine(_refresh) { filters, refresh ->
+            if (refresh) this._refresh.value = false
+            savedArticlesRepository.getAllArticles(filters.chosenDates)
         }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
+
+    fun onRefreshChanged(refresh: Boolean) {
+        _refresh.value = refresh
     }
 
     @Suppress("UNCHECKED_CAST")

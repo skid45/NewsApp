@@ -2,6 +2,7 @@ package com.skid.news.repository
 
 import com.skid.news.model.Article
 import kotlinx.coroutines.flow.Flow
+import java.util.Calendar
 
 interface SavedArticlesRepository {
 
@@ -11,7 +12,7 @@ interface SavedArticlesRepository {
 
     suspend fun deleteArticleByUrl(url: String)
 
-    suspend fun getAllArticles(): List<Article>
+    suspend fun getAllArticles(chosenDates: Pair<Calendar, Calendar>?): List<Article>
 
     suspend fun deleteOldArticles(timestampInMillis: Long)
 }

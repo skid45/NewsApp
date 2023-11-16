@@ -43,9 +43,9 @@ class SourcesViewModel @Inject constructor(
 
     private fun updateSources() {
         viewModelScope.launch {
-            filtersRepository.getLanguage().collect { language ->
+            filtersRepository.getFilters().collect { filters ->
                 val result = sourcesRepository
-                    .getSources(language = language?.apiName)
+                    .getSources(language = filters.language?.apiName)
                 _uiState.value =
                     if (result.isSuccess) SourcesUiState.Success(result.getOrThrow())
                     else SourcesUiState.Error(result.exceptionOrNull()?.localizedMessage ?: "")

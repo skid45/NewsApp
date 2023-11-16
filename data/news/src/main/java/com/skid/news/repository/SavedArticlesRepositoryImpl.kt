@@ -6,10 +6,11 @@ import com.skid.news.mapper.toArticle
 import com.skid.news.mapper.toSavedArticleEntity
 import com.skid.news.model.Article
 import kotlinx.coroutines.flow.Flow
+import java.util.Calendar
 import javax.inject.Inject
 
 class SavedArticlesRepositoryImpl @Inject constructor(
-    private val savedArticlesDao: SavedArticlesDao
+    private val savedArticlesDao: SavedArticlesDao,
 ) : SavedArticlesRepository {
 
     override fun isExists(url: String): Flow<Boolean> {
@@ -24,8 +25,11 @@ class SavedArticlesRepositoryImpl @Inject constructor(
         savedArticlesDao.deleteByUrl(url)
     }
 
-    override suspend fun getAllArticles(): List<Article> {
-        return savedArticlesDao.getAllArticles().map(SavedArticleEntity::toArticle)
+    override suspend fun getAllArticles(chosenDates: Pair<Calendar, Calendar>?): List<Article> {
+        return savedArticlesDao.getAllArticles(
+            chosenDates?.first?.timeInMillis,
+            chosenDates?.second?.timeInMillis
+        ).map(SavedArticleEntity::toArticle)
     }
 
     override suspend fun deleteOldArticles(timestampInMillis: Long) {

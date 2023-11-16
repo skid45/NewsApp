@@ -85,7 +85,6 @@ dependencies {
     implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
 
     // Core modules
-    implementation(project(":core:datastore"))
     implementation(project(":core:database"))
     implementation(project(":core:network"))
     implementation(project(":core:ui"))

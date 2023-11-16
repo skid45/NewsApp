@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.skid.filters.repository.FiltersRepository
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Provider
@@ -14,7 +15,8 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     val numberOfFilters = filtersRepository
-        .getNumberOfFilters()
+        .getFilters()
+        .map { it.numberOfFilters }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

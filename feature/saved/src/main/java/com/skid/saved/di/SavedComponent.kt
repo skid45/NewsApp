@@ -1,5 +1,6 @@
 package com.skid.saved.di
 
+import com.skid.filters.repository.FiltersRepository
 import com.skid.news.repository.SavedArticlesRepository
 import com.skid.saved.SavedFragment
 import com.skid.saved.SavedRouter
@@ -21,6 +22,7 @@ internal interface SavedComponent {
 interface SavedDeps {
 
     val savedArticlesRepository: SavedArticlesRepository
+    val filtersRepository: FiltersRepository
     val savedRouter: SavedRouter
 }
 
