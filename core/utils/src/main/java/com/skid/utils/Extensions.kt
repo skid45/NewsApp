@@ -37,7 +37,7 @@ fun Context.resolveAttributeColor(@AttrRes attrId: Int): Int {
     }.data
 }
 
-fun <T : Flow<R>, R> Fragment.collectFlow(flow: T, collectBlock: (R) -> Unit) {
+fun <T : Flow<R>, R> Fragment.collectFlow(flow: T, collectBlock: suspend (R) -> Unit) {
     viewLifecycleOwner.lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             flow.collect(collectBlock)
@@ -45,7 +45,7 @@ fun <T : Flow<R>, R> Fragment.collectFlow(flow: T, collectBlock: (R) -> Unit) {
     }
 }
 
-fun <T : Flow<R>, R> AppCompatActivity.collectFlow(flow: T, collectBlock: (R) -> Unit) {
+fun <T : Flow<R>, R> AppCompatActivity.collectFlow(flow: T, collectBlock: suspend (R) -> Unit) {
     lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             flow.collect(collectBlock)

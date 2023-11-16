@@ -10,6 +10,7 @@ import com.skid.filters.di.FiltersDepsStore
 import com.skid.newsapp.di.AppComponent
 import com.skid.newsapp.di.DaggerAppComponent
 import com.skid.newslistbysource.di.NewsListBySourceDepsStore
+import com.skid.saved.di.SavedDepsStore
 import com.skid.sources.di.SourcesDepsStore
 import com.skid.utils.Constants.FILTERS_PREFERENCES
 
@@ -25,6 +26,7 @@ class NewsApplication : Application() {
         FiltersDepsStore.deps = appComponent
         NewsListBySourceDepsStore.deps = appComponent
         ArticleDepsStore.deps = appComponent
+        SavedDepsStore.deps = appComponent
     }
 }
 

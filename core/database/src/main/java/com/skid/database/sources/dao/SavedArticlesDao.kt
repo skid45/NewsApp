@@ -18,7 +18,7 @@ interface SavedArticlesDao {
     @Query("DELETE FROM saved_articles WHERE url = :url")
     suspend fun deleteByUrl(url: String)
 
-    @Query("SELECT * FROM saved_articles")
+    @Query("SELECT * FROM saved_articles ORDER BY published_at DESC")
     suspend fun getAllArticles(): List<SavedArticleEntity>
 
     @Query("DELETE FROM saved_articles WHERE created_at < :timestampInMillis")

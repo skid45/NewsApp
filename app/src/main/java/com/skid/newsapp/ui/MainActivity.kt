@@ -8,7 +8,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
@@ -57,11 +56,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.activityMainToolbar)
-        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         setupToolbar()
         setupBottomNavigation()
         collectNumberOfFilters()
+        setupBackStackListener()
 
         if (savedInstanceState == null) {
             binding.activityMainBottomNavigationView.selectedItemId = R.id.bottom_menu_headlines
@@ -72,8 +71,8 @@ class MainActivity : AppCompatActivity() {
         activityMainBottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.bottom_menu_headlines -> {} //router.replaceScreen(TODO("HeadlinesFragment"))
-                R.id.bottom_menu_saved -> {} //router.replaceScreen(TODO("HeadlinesFragment"))
-                R.id.bottom_menu_sources -> router.replaceScreen(Screens.SourcesScreen)
+                R.id.bottom_menu_saved -> router.newRootScreen(Screens.SavedScreen)
+                R.id.bottom_menu_sources -> router.newRootScreen(Screens.SourcesScreen)
                 else -> return@setOnItemSelectedListener false
             }
             true
@@ -104,9 +103,10 @@ class MainActivity : AppCompatActivity() {
         persistentState: PersistableBundle?,
     ) {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
-        if (supportFragmentManager.backStackEntryCount == 0)
+        if (supportFragmentManager.backStackEntryCount == 0) {
             binding.activityMainBottomNavigationView.selectedItemId =
                 savedInstanceState?.getInt(SELECTED_ITEM_ID_KEY) ?: R.id.bottom_menu_headlines
+        }
     }
 
     @OptIn(ExperimentalBadgeUtils::class)
@@ -152,6 +152,11 @@ class MainActivity : AppCompatActivity() {
                         true
                     }
 
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+
                     else -> false
                 }
             }
@@ -159,31 +164,13 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun onNavigateBack(): Boolean {
-        return if (supportFragmentManager.backStackEntryCount > 0) {
-            router.exit()
-            if (supportFragmentManager.backStackEntryCount == 1) {
+    private fun setupBackStackListener() {
+        supportFragmentManager.addOnBackStackChangedListener {
+            if (supportFragmentManager.backStackEntryCount < 1) {
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
-            }
-            true
-        } else false
-
-    }
-
-    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            if (!onNavigateBack()) {
-                isEnabled = false
-                onBackPressedDispatcher.onBackPressed()
-            }
+            } else supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
     }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
-        return true
-    }
-
 
     private fun collectNumberOfFilters() {
         collectFlow(mainViewModel.numberOfFilters) { numberOfFilters ->

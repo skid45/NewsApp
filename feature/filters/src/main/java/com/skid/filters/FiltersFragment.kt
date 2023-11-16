@@ -75,10 +75,8 @@ class FiltersFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-            title = getString(com.skid.ui.R.string.filters)
-            setDisplayHomeAsUpEnabled(true)
-        }
+        (requireActivity() as AppCompatActivity).supportActionBar?.title =
+            getString(com.skid.ui.R.string.filters)
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(menuProvider, viewLifecycleOwner, Lifecycle.State.RESUMED)

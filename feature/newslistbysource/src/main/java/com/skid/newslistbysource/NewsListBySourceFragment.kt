@@ -18,7 +18,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.skid.newslist.databinding.FragmentNewsListBySourceBinding
 import com.skid.newslistbysource.di.NewsListBySourceComponentViewModel
@@ -123,20 +125,20 @@ class NewsListBySourceFragment : Fragment() {
     private fun setupRecyclerView() = with(binding) {
         newsListBySourceRecyclerView.layoutManager = LinearLayoutManager(context)
         newsListBySourceRecyclerView.adapter = newsAdapter
-
+        newsListBySourceRecyclerView
+            .addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
         newsAdapter.addOnLoadMoreListener(newsListBySourceViewModel::onLoadNextPage)
 
         newsListBySourceSearchRecyclerView.layoutManager = LinearLayoutManager(context)
         newsListBySourceSearchRecyclerView.adapter = newsSearchAdapter
-
+        newsListBySourceSearchRecyclerView
+            .addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
         newsSearchAdapter.addOnLoadMoreListener(newsListBySourceViewModel::onLoadNextPageForSearch)
     }
 
     private fun setupToolbar() {
-        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
-            title = requireArguments().getString(SOURCE_NAME_KEY)
-            setDisplayHomeAsUpEnabled(true)
-        }
+        (requireActivity() as AppCompatActivity).supportActionBar?.title =
+            requireArguments().getString(SOURCE_NAME_KEY)
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(menuProvider, viewLifecycleOwner, Lifecycle.State.RESUMED)
@@ -185,12 +187,7 @@ class NewsListBySourceFragment : Fragment() {
             )
         }
 
-        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-            if (menuItem.itemId == android.R.id.home) {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-            }
-            return true
-        }
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean = true
     }
 
     private fun setupSwipeRefresh() = with(binding) {
