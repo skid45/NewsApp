@@ -3,12 +3,19 @@ package com.skid.saved
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -36,6 +43,7 @@ class SavedFragment : Fragment() {
     lateinit var router: SavedRouter
 
     private val savedArticlesAdapter by lazy { createArticlesAdapter() }
+    private val savedArticlesByQueryAdapter by lazy { createArticlesAdapter() }
 
     override fun onAttach(context: Context) {
         ViewModelProvider(this)
@@ -60,6 +68,7 @@ class SavedFragment : Fragment() {
         setupRecyclerView()
         setupSavedArticlesCollect()
         setupSwipeRefreshLayout()
+        setupSavedArticlesByQueryCollect()
     }
 
     override fun onDestroyView() {
@@ -71,6 +80,10 @@ class SavedFragment : Fragment() {
         savedRecyclerView.layoutManager = LinearLayoutManager(context)
         savedRecyclerView.adapter = savedArticlesAdapter
         savedRecyclerView.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
+
+        savedSearchRecyclerView.layoutManager = LinearLayoutManager(context)
+        savedSearchRecyclerView.adapter = savedArticlesByQueryAdapter
+        savedSearchRecyclerView.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
     }
 
     private fun createArticlesAdapter() = createAdapter(
@@ -106,9 +119,54 @@ class SavedFragment : Fragment() {
         }
     }
 
+    private fun setupSavedArticlesByQueryCollect() {
+        collectFlow(
+            flow = savedViewModel.savedArticlesByQuery,
+            collectBlock = savedArticlesByQueryAdapter::submitList
+        )
+    }
+
     private fun setupToolbar() {
         (requireActivity() as AppCompatActivity).supportActionBar?.title =
             getString(com.skid.ui.R.string.saved)
+
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(menuProvider, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private val menuProvider = object : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            val searchItem = menu.findItem(com.skid.ui.R.id.main_activity_menu_search)
+            (searchItem.actionView as SearchView).setOnQueryTextListener(
+                object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean = true
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        savedViewModel.onQueryChanged(newText ?: "")
+                        return true
+                    }
+                }
+            )
+            with(binding) {
+                searchItem.setOnActionExpandListener(
+                    object : MenuItem.OnActionExpandListener {
+                        override fun onMenuItemActionExpand(p0: MenuItem): Boolean {
+                            savedSwipeRefreshLayout.isVisible = false
+                            savedSearchRecyclerView.isVisible = true
+                            return true
+                        }
+
+                        override fun onMenuItemActionCollapse(p0: MenuItem): Boolean {
+                            savedSwipeRefreshLayout.isVisible = true
+                            savedSearchRecyclerView.isVisible = false
+                            return true
+                        }
+                    }
+                )
+            }
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean = true
     }
 
 }

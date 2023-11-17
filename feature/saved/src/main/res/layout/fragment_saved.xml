@@ -26,4 +26,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/saved_search_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_60"
+        android:visibility="gone"
+        tools:itemCount="3"
+        tools:listitem="@layout/article_item" />
+
 </FrameLayout>

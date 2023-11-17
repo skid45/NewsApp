@@ -60,6 +60,7 @@
 
 
         <item name="bottomNavigationStyle">@style/BottomNavigationViewStyle</item>
+        <item name="appBarLayoutStyle">@style/AppBarLayoutStyle</item>
         <item name="toolbarStyle">@style/MaterialToolbarStyle</item>
         <item name="searchViewStyle">@style/SearchViewStyle</item>
     </style>

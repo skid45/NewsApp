@@ -15,7 +15,6 @@
             android:id="@+id/activity_main_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
             app:menu="@menu/main_activity_menu"
             tools:title="Headlines" />
 

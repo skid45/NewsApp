@@ -5,10 +5,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.skid.filters.repository.FiltersRepository
 import com.skid.news.repository.SavedArticlesRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -34,8 +38,27 @@ class SavedViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
+    private val query = MutableStateFlow("")
+
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    val savedArticlesByQuery = query
+        .debounce(100)
+        .mapLatest { query ->
+            if (query.isBlank()) emptyList()
+            else savedArticlesRepository.getArticlesByQuery(query)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
+
     fun onRefreshChanged(refresh: Boolean) {
         _refresh.value = refresh
+    }
+
+    fun onQueryChanged(query: String) {
+        this.query.value = query
     }
 
     @Suppress("UNCHECKED_CAST")

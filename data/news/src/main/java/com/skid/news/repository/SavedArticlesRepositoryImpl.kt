@@ -32,6 +32,10 @@ class SavedArticlesRepositoryImpl @Inject constructor(
         ).map(SavedArticleEntity::toArticle)
     }
 
+    override suspend fun getArticlesByQuery(query: String): List<Article> {
+        return savedArticlesDao.getArticlesByQuery(query).map(SavedArticleEntity::toArticle)
+    }
+
     override suspend fun deleteOldArticles(timestampInMillis: Long) {
         savedArticlesDao.deleteOldArticles(timestampInMillis)
     }

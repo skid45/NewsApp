@@ -23,6 +23,12 @@ interface SavedArticlesDao {
             " ORDER BY published_at DESC")
     suspend fun getAllArticles(from: Long? = null, to: Long? = null): List<SavedArticleEntity>
 
+    @Query("SELECT * FROM saved_articles WHERE " +
+            "title LIKE '%' || :query || '%' OR " +
+            "description LIKE '%' || :query || '%' OR " +
+            "content LIKE '%' || :query || '%'")
+    suspend fun getArticlesByQuery(query: String): List<SavedArticleEntity>
+
     @Query("DELETE FROM saved_articles WHERE created_at < :timestampInMillis")
     suspend fun deleteOldArticles(timestampInMillis: Long)
 }

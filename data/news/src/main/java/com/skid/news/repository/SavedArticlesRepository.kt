@@ -14,5 +14,7 @@ interface SavedArticlesRepository {
 
     suspend fun getAllArticles(chosenDates: Pair<Calendar, Calendar>?): List<Article>
 
+    suspend fun getArticlesByQuery(query: String): List<Article>
+
     suspend fun deleteOldArticles(timestampInMillis: Long)
 }
