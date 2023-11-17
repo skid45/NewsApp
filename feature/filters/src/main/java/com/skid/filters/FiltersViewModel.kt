@@ -1,6 +1,5 @@
 package com.skid.filters
 
-import android.util.Log
 import androidx.annotation.IntRange
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -59,7 +58,6 @@ class FiltersViewModel @Inject constructor(
             is FiltersEvent.SaveFilters -> {
                 viewModelScope.launch {
                     uiState.value?.let { uiState ->
-                        Log.d("TAG", "onEvent: $uiState")
                         filtersRepository.saveFilters(
                             Filters(
                                 sortBy = uiState.sortBy,

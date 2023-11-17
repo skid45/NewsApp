@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import javax.inject.Provider
@@ -23,10 +24,10 @@ class SavedViewModel @Inject constructor(
 
     val savedArticles = filtersRepository
         .getFilters()
-        .combine(_refresh) { filters, refresh ->
-            if (refresh) this._refresh.value = false
+        .combine(refresh) { filters, _ ->
             savedArticlesRepository.getAllArticles(filters.chosenDates)
         }
+        .onEach { if (refresh.value) onRefreshChanged(false) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
