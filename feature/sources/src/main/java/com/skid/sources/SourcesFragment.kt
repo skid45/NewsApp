@@ -14,7 +14,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
@@ -25,6 +25,7 @@ import com.skid.sources.databinding.FragmentSourcesBinding
 import com.skid.sources.databinding.SourcesItemBinding
 import com.skid.sources.di.SourcesComponentViewModel
 import com.skid.ui.createAdapter
+import com.skid.utils.Constants.ERROR_RESULT_KEY
 import com.skid.utils.collectFlow
 import javax.inject.Inject
 import javax.inject.Provider
@@ -36,10 +37,10 @@ class SourcesFragment : Fragment() {
 
     @Inject
     lateinit var viewModelProvider: Provider<SourcesViewModel.Factory>
-    private val sourcesViewModel: SourcesViewModel by activityViewModels { viewModelProvider.get() }
+    private val sourcesViewModel: SourcesViewModel by viewModels { viewModelProvider.get() }
 
     @Inject
-    lateinit var sourcesRouter: SourcesRouter
+    lateinit var router: SourcesRouter
 
     private val sourcesAdapter by lazy { createSourcesAdapter() }
 
@@ -64,6 +65,7 @@ class SourcesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupErrorResultListener()
         setupToolbar()
         setupRecyclerView()
         setupSwipeToRefresh()
@@ -90,7 +92,7 @@ class SourcesFragment : Fragment() {
     private fun createSourcesAdapter() = createAdapter(
         binding = { inflater, parent -> SourcesItemBinding.inflate(inflater, parent, false) },
         bind = { source ->
-            root.setOnClickListener { sourcesRouter.navigateToNewsListBySource(source.id, source.name) }
+            root.setOnClickListener { router.onNewsListBySource(source.id, source.name) }
             sourcesItemName.text = source.name
             sourcesItemCategory.text = source.category
             sourcesItemCountry.text = source.country
@@ -168,7 +170,7 @@ class SourcesFragment : Fragment() {
                     sourcesProgressBar.isVisible = false
                 }
 
-                is SourcesUiState.Error -> {} // TODO(Navigate to ErrorFragment)
+                is SourcesUiState.Error -> router.onError(parentFragmentManager, uiState.message)
             }
         }
     }
@@ -179,4 +181,10 @@ class SourcesFragment : Fragment() {
         }
     }
 
+    private fun setupErrorResultListener() {
+        parentFragmentManager.setFragmentResultListener(
+            ERROR_RESULT_KEY,
+            viewLifecycleOwner
+        ) { _, _ -> sourcesViewModel.onEvent(SourcesEvent.OnUpdateSources) }
+    }
 }

@@ -101,6 +101,7 @@ dependencies {
     implementation(project(":feature:newslistbysource"))
     implementation(project(":feature:article"))
     implementation(project(":feature:saved"))
+    implementation(project(":feature:error"))
 
     implementation(project(":paging"))
 
