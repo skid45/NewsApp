@@ -15,6 +15,7 @@ import com.skid.newsapp.di.module.ResourceModule
 import com.skid.newsapp.di.module.SavedModule
 import com.skid.newsapp.di.module.SourcesModule
 import com.skid.newsapp.ui.MainActivity
+import com.skid.newsapp.ui.SplashScreenActivity
 import com.skid.newslistbysource.NewsListBySourceRouter
 import com.skid.newslistbysource.di.NewsListBySourceDeps
 import com.skid.saved.SavedRouter
@@ -56,6 +57,8 @@ interface AppComponent : SourcesDeps, FiltersDeps, NewsListBySourceDeps, Article
     override val savedRouter: SavedRouter
 
     fun inject(activity: MainActivity)
+
+    fun inject(activity: SplashScreenActivity)
 
     @Component.Factory
     interface Factory {
