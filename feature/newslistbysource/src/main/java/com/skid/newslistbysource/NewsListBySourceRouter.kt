@@ -5,4 +5,6 @@ import com.skid.news.model.Article
 interface NewsListBySourceRouter {
 
     fun toArticleProfile(article: Article)
+
+    fun onError(message: String)
 }

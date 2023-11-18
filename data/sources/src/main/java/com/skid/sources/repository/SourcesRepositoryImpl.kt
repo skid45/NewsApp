@@ -26,8 +26,7 @@ class SourcesRepositoryImpl @Inject constructor(
     ): Result<List<Source>> {
         if (!refresh) {
             val sources = getSourcesFromDB(language, query)
-            return if (sources.isEmpty()) getSources(true, language, query)
-            else Result.success(sources)
+            return Result.success(sources)
         }
 
         val result = try {

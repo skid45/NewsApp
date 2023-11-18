@@ -34,7 +34,6 @@ class NewsListBySourceViewModel @Inject constructor(
 
     val newsPagerObservable = pager
         .switchMap { pager -> pager.loadNextPage() }
-        .cache()
 
     private val combinedParameters = Observable
         .combineLatest(

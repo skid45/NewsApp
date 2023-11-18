@@ -12,4 +12,8 @@ class NewsListBySourceRouterImpl @Inject constructor(
     override fun toArticleProfile(article: Article) {
         router.navigateTo(Screens.ArticleProfileScreen(article))
     }
+
+    override fun onError(message: String) {
+        router.navigateTo(Screens.ErrorScreen(message))
+    }
 }

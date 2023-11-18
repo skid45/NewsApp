@@ -26,6 +26,7 @@ import com.skid.newslist.databinding.FragmentNewsListBySourceBinding
 import com.skid.newslistbysource.di.NewsListBySourceComponentViewModel
 import com.skid.paging.PagingAdapter
 import com.skid.ui.databinding.ArticleItemBinding
+import com.skid.utils.Constants
 import com.skid.utils.Constants.SOURCE_ID_KEY
 import com.skid.utils.Constants.SOURCE_NAME_KEY
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -64,7 +65,8 @@ class NewsListBySourceFragment : Fragment() {
                 articleItemSourceImage.setImageResource(article.sourceDrawableId)
                 articleItemSourceName.text = article.sourceName
                 articleItemTitle.text = article.title
-            }
+            },
+            doOnError = router::onError
         )
     }
 
@@ -82,7 +84,8 @@ class NewsListBySourceFragment : Fragment() {
                 articleItemSourceImage.setImageResource(article.sourceDrawableId)
                 articleItemSourceName.text = article.sourceName
                 articleItemTitle.text = article.title
-            }
+            },
+            doOnError = router::onError
         )
     }
 
@@ -110,6 +113,7 @@ class NewsListBySourceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupErrorResultListener()
         setupToolbar()
         setupRecyclerView()
         setupSwipeRefresh()
@@ -208,6 +212,13 @@ class NewsListBySourceFragment : Fragment() {
             }
 
         disposables.add(disposable)
+    }
+
+    private fun setupErrorResultListener() {
+        parentFragmentManager.setFragmentResultListener(
+            Constants.ERROR_RESULT_KEY,
+            viewLifecycleOwner
+        ) { _, _ -> newsListBySourceViewModel.refreshPager() }
     }
 
 }
