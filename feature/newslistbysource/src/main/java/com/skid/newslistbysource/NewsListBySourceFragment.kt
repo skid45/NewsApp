@@ -84,8 +84,7 @@ class NewsListBySourceFragment : Fragment() {
                 articleItemSourceImage.setImageResource(article.sourceDrawableId)
                 articleItemSourceName.text = article.sourceName
                 articleItemTitle.text = article.title
-            },
-            doOnError = router::onError
+            }
         )
     }
 
