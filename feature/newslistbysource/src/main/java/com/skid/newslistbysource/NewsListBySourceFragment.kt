@@ -89,15 +89,13 @@ class NewsListBySourceFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
+        super.onAttach(context)
+
         ViewModelProvider(this)
             .get<NewsListBySourceComponentViewModel>()
             .newsListBySourceComponent
             .inject(this)
-        super.onAttach(context)
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         newsListBySourceViewModel.onSourceIdChanged(requireArguments().getString(SOURCE_ID_KEY))
     }
 

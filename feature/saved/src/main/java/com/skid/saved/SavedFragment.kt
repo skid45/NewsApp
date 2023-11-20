@@ -46,11 +46,12 @@ class SavedFragment : Fragment() {
     private val savedArticlesByQueryAdapter by lazy { createArticlesAdapter() }
 
     override fun onAttach(context: Context) {
+        super.onAttach(context)
+
         ViewModelProvider(this)
             .get<SavedComponentViewModel>()
             .savedComponent
             .inject(this)
-        super.onAttach(context)
     }
 
     override fun onCreateView(

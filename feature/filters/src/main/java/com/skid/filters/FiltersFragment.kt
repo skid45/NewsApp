@@ -44,11 +44,12 @@ class FiltersFragment : Fragment() {
     private val filtersViewModel: FiltersViewModel by viewModels { viewModelProvider.get() }
 
     override fun onAttach(context: Context) {
+        super.onAttach(context)
+
         ViewModelProvider(this)
             .get<FiltersComponentViewModel>()
             .filtersComponent
             .inject(this)
-        super.onAttach(context)
     }
 
     override fun onCreateView(

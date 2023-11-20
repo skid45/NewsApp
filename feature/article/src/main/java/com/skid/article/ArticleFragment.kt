@@ -41,11 +41,13 @@ class ArticleFragment : Fragment() {
     private val articleViewModel: ArticleViewModel by viewModels { viewModelProvider.get() }
 
     override fun onAttach(context: Context) {
+        super.onAttach(context)
+
         ViewModelProvider(this)
             .get<ArticleComponentViewModel>()
             .articleComponent
             .inject(this)
-        super.onAttach(context)
+
         articleViewModel.onUrlChanged(article.url)
     }
 

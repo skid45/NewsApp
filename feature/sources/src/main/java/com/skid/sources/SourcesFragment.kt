@@ -47,11 +47,12 @@ class SourcesFragment : Fragment() {
     private val sourcesByQueryAdapter by lazy { createSourcesAdapter() }
 
     override fun onAttach(context: Context) {
+        super.onAttach(context)
+
         ViewModelProvider(this)
             .get<SourcesComponentViewModel>()
             .sourcesComponent
             .inject(this)
-        super.onAttach(context)
     }
 
     override fun onCreateView(
