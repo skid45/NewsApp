@@ -72,9 +72,6 @@ dependencies {
     val lifecycleVersion = "2.6.2"
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
 
-    val dataStoreVersion = "1.0.0"
-    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
-
     val roomVersion = "2.6.0"
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
@@ -102,6 +99,7 @@ dependencies {
     implementation(project(":feature:article"))
     implementation(project(":feature:saved"))
     implementation(project(":feature:error"))
+    implementation(project(":feature:headlines"))
 
     implementation(project(":paging"))
 

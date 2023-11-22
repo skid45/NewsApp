@@ -25,4 +25,7 @@
     <string name="too_many_requests_try_later">Too many requests\nTry later</string>
     <string name="save">Save</string>
     <string name="refresh">Refresh</string>
+    <string name="general">General</string>
+    <string name="business">Business</string>
+    <string name="traveling">Traveling</string>
 </resources>

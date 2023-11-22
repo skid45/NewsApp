@@ -5,6 +5,7 @@ import com.github.terrakok.cicerone.androidx.FragmentScreen
 import com.skid.article.ArticleFragment
 import com.skid.error.ErrorFragment
 import com.skid.filters.FiltersFragment
+import com.skid.headlines.headlines.HeadlinesFragment
 import com.skid.news.model.Article
 import com.skid.newslistbysource.NewsListBySourceFragment
 import com.skid.saved.SavedFragment
@@ -15,7 +16,7 @@ import com.skid.utils.Constants.SOURCE_ID_KEY
 import com.skid.utils.Constants.SOURCE_NAME_KEY
 
 object Screens {
-    //    val HeadlinesScreen get() = FragmentScreen { HeadlinesFragment() }
+    val HeadlinesScreen get() = FragmentScreen { HeadlinesFragment() }
     val SavedScreen get() = FragmentScreen { SavedFragment() }
     val SourcesScreen get() = FragmentScreen { SourcesFragment() }
     val FiltersScreen get() = FragmentScreen { FiltersFragment() }

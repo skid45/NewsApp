@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.skid.article.di.ArticleDepsStore
 import com.skid.filters.di.FiltersDepsStore
+import com.skid.headlines.di.HeadlinesDepsStore
 import com.skid.newsapp.di.AppComponent
 import com.skid.newsapp.di.DaggerAppComponent
 import com.skid.newslistbysource.di.NewsListBySourceDepsStore
@@ -23,6 +24,7 @@ class NewsApplication : Application() {
         NewsListBySourceDepsStore.deps = appComponent
         ArticleDepsStore.deps = appComponent
         SavedDepsStore.deps = appComponent
+        HeadlinesDepsStore.deps = appComponent
     }
 }
 

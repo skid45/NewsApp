@@ -4,6 +4,7 @@ import android.content.Context
 import com.skid.article.di.ArticleDeps
 import com.skid.filters.di.FiltersDeps
 import com.skid.filters.repository.FiltersRepository
+import com.skid.headlines.di.HeadlinesDeps
 import com.skid.news.repository.NewsRepository
 import com.skid.news.repository.SavedArticlesRepository
 import com.skid.newsapp.di.module.DatabaseModule
@@ -40,7 +41,8 @@ import javax.inject.Singleton
         SavedModule::class,
     ]
 )
-interface AppComponent : SourcesDeps, FiltersDeps, NewsListBySourceDeps, ArticleDeps, SavedDeps {
+interface AppComponent : SourcesDeps, FiltersDeps, NewsListBySourceDeps, ArticleDeps, SavedDeps,
+    HeadlinesDeps {
 
     override val filtersRepository: FiltersRepository
 

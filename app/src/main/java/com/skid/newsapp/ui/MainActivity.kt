@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNavigation() = with(binding) {
         activityMainBottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.bottom_menu_headlines -> {} //router.replaceScreen(TODO("HeadlinesFragment"))
+                R.id.bottom_menu_headlines -> router.newRootScreen(Screens.HeadlinesScreen)
                 R.id.bottom_menu_saved -> router.newRootScreen(Screens.SavedScreen)
                 R.id.bottom_menu_sources -> router.newRootScreen(Screens.SourcesScreen)
                 else -> return@setOnItemSelectedListener false
