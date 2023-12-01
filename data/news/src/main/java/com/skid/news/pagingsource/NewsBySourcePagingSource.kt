@@ -28,7 +28,7 @@ class NewsBySourcePagingSource @AssistedInject constructor(
 ) : PagingSource<Article>() {
 
     override fun loadPage(pageSize: Int, pageNumber: Int): Single<LoadResult<Article>> {
-        return newsService.getNewsBySource(
+        return newsService.getNews(
             query = query,
             source = source,
             page = pageNumber,

@@ -3,12 +3,12 @@
     <string-array name="tab_names">
         <item>@string/general</item>
         <item>@string/business</item>
-        <item>@string/traveling</item>
+        <item>@string/science</item>
     </string-array>
 
     <array name="tab_icons">
         <item>@drawable/ic_general</item>
         <item>@drawable/ic_business</item>
-        <item>@drawable/ic_traveling</item>
+        <item>@drawable/ic_science</item>
     </array>
 </resources>

@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface EverythingService {
 
     @GET("everything")
-    fun getNewsBySource(
+    fun getNews(
         @Query("q") query: String? = null,
         @Query("sources") source: String? = null,
         @Query("page") @IntRange(from = 1) page: Int = 1,

@@ -9,6 +9,7 @@ import com.skid.news.repository.NewsRepository
 import com.skid.news.repository.SavedArticlesRepository
 import com.skid.newsapp.di.module.DatabaseModule
 import com.skid.newsapp.di.module.FiltersModule
+import com.skid.newsapp.di.module.HeadlinesModule
 import com.skid.newsapp.di.module.NavigationModule
 import com.skid.newsapp.di.module.NetworkModule
 import com.skid.newsapp.di.module.NewsListModule
@@ -39,6 +40,7 @@ import javax.inject.Singleton
         SourcesModule::class,
         NewsListModule::class,
         SavedModule::class,
+        HeadlinesModule::class,
     ]
 )
 interface AppComponent : SourcesDeps, FiltersDeps, NewsListBySourceDeps, ArticleDeps, SavedDeps,

@@ -1,5 +1,6 @@
 package com.skid.news.mapper
 
+import com.skid.database.sources.model.CachedArticleEntity
 import com.skid.database.sources.model.SavedArticleEntity
 import com.skid.network.model.ArticleDTO
 import com.skid.news.model.Article
@@ -11,7 +12,7 @@ fun ArticleDTO.toArticle(): Article {
     return Article(
         url = url,
         title = title,
-        description = description,
+        description = description ?: "",
         content = content,
         publishedAt = publishedAt.parseToCalendar("yyyy-MM-dd'T'HH:mm:ss'Z'"),
         imageUrl = urlToImage,
@@ -34,6 +35,33 @@ fun Article.toSavedArticleEntity(): SavedArticleEntity {
 }
 
 fun SavedArticleEntity.toArticle(): Article {
+    return Article(
+        url = url,
+        title = title,
+        description = description,
+        content = content,
+        publishedAt = publishedAt,
+        imageUrl = imageUrl,
+        sourceName = sourceName,
+        sourceDrawableId = sourceDrawableId
+    )
+}
+
+fun ArticleDTO.toCachedArticleEntity(category: String): CachedArticleEntity {
+    return CachedArticleEntity(
+        url = url,
+        title = title,
+        description = description ?: "",
+        content = content,
+        publishedAt = publishedAt.parseToCalendar("yyyy-MM-dd'T'HH:mm:ss'Z'"),
+        imageUrl = urlToImage,
+        sourceName = source.name,
+        sourceDrawableId = sourcesDrawablesMap[source.name] ?: R.drawable.source_photo_stub,
+        category = category,
+    )
+}
+
+fun CachedArticleEntity.toArticle(): Article {
     return Article(
         url = url,
         title = title,

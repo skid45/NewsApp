@@ -10,7 +10,7 @@ data class Article(
     val description: String,
     val content: String,
     val publishedAt: Calendar,
-    val imageUrl: String,
+    val imageUrl: String?,
     val sourceName: String,
     @DrawableRes val sourceDrawableId: Int
 ) : Serializable

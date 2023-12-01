@@ -1,5 +1,7 @@
 package com.skid.headlines.di
 
+import com.skid.filters.repository.FiltersRepository
+import com.skid.headlines.HeadlinesRouter
 import com.skid.headlines.headlines.HeadlinesFragment
 import com.skid.headlines.newsbycategory.NewsByCategoryFragment
 import com.skid.news.repository.NewsRepository
@@ -23,6 +25,8 @@ internal interface HeadlinesComponent {
 interface HeadlinesDeps {
 
     val newsRepository: NewsRepository
+    val filtersRepository: FiltersRepository
+    val headlinesRouter: HeadlinesRouter
 }
 
 interface HeadlinesDepsProvider {

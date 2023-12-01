@@ -81,6 +81,11 @@ dependencies {
     implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
     implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
 
+    val moxyVersion = "2.2.2"
+    implementation ("com.github.moxy-community:moxy:$moxyVersion")
+    kapt("com.github.moxy-community:moxy-compiler:$moxyVersion")
+    implementation("com.github.moxy-community:moxy-androidx:$moxyVersion")
+
     // Core modules
     implementation(project(":core:database"))
     implementation(project(":core:network"))

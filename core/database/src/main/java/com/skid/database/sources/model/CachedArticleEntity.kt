@@ -5,8 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Calendar
 
-@Entity(tableName = "saved_articles")
-data class SavedArticleEntity(
+@Entity(tableName = "cached_articles")
+data class CachedArticleEntity(
     @PrimaryKey val url: String,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "description") val description: String,
@@ -15,5 +15,5 @@ data class SavedArticleEntity(
     @ColumnInfo(name = "image_url") val imageUrl: String?,
     @ColumnInfo(name = "source_name") val sourceName: String,
     @ColumnInfo(name = "source_drawable_id") val sourceDrawableId: Int,
-    @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis()
+    @ColumnInfo(name = "category") val category: String,
 )
