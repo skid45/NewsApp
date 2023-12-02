@@ -84,16 +84,13 @@ public class NewsByCategoryPresenter extends MvpPresenter<NewsByCategoryView> {
 
         disposables.add(pager
                 .switchMap(Pager::loadNextPage)
-                .doOnEach(pagingData -> {
-                    if (pagingData.getValue() != null) {
-                        getViewState().showProgress(false);
-                        getViewState().submitPage(pagingData.getValue());
-                        getViewState().hideRefresh();
-                    }
-                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+                .subscribe(pagingData -> {
+                    getViewState().showProgress(false);
+                    getViewState().submitPage(pagingData);
+                    getViewState().hideRefresh();
+                })
         );
     }
 

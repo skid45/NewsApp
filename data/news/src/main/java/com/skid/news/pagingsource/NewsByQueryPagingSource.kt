@@ -1,6 +1,5 @@
 package com.skid.news.pagingsource
 
-import android.util.Log
 import com.skid.database.sources.dao.CachedArticlesDao
 import com.skid.database.sources.model.CachedArticleEntity
 import com.skid.network.model.ArticleDTO
@@ -63,9 +62,12 @@ class NewsByQueryPagingSource @AssistedInject constructor(
                                     Single.just(loadResult)
                                 } else {
                                     cachedArticlesDao
-                                        .getArticlesPageByQuery(pageSize, pageNumber - initialPage, query)
+                                        .getArticlesPageByQuery(
+                                            pageSize = pageSize,
+                                            pageNumber = pageNumber - initialPage,
+                                            query = query
+                                        )
                                         .map { cachedArticleEntities ->
-                                            Log.d("TAG", "loadPage: ${cachedArticleEntities.size}")
                                             LoadResult.Page(
                                                 data = cachedArticleEntities.map(CachedArticleEntity::toArticle),
                                                 nextKey = pageNumber + 1

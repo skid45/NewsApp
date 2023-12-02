@@ -79,17 +79,16 @@ public class HeadlinesFragment extends MvpAppCompatFragment implements Headlines
             @Nullable Bundle savedInstanceState
     ) {
         binding = FragmentHeadlinesBinding.inflate(inflater, container, false);
+        headlinesPagerAdapter = new HeadlinesPagerAdapter(
+                this,
+                getResources().getStringArray(com.skid.ui.R.array.tab_names)
+        );
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        headlinesPagerAdapter = new HeadlinesPagerAdapter(
-                this,
-                getResources().getStringArray(com.skid.ui.R.array.tab_names)
-        );
 
         headlinesByQueryAdapter = new PagingAdapter<>(
                 new ArticleDiffCallback(),
@@ -112,9 +111,9 @@ public class HeadlinesFragment extends MvpAppCompatFragment implements Headlines
         );
 
 
+        setupPager();
         setupToolbar();
         setupRecyclerView();
-        setupPager();
         setupTabs();
     }
 

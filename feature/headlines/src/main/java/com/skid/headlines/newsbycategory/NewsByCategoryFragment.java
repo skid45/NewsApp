@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.skid.utils.Lazy;
 import com.skid.headlines.databinding.FragmentNewsByCategoryBinding;
 import com.skid.headlines.di.HeadlinesComponentViewModel;
 import com.skid.news.model.Article;
@@ -36,7 +37,27 @@ public class NewsByCategoryFragment extends MvpAppCompatFragment implements News
 
     private FragmentNewsByCategoryBinding binding;
 
-    private PagingAdapter<Article, ArticleItemBinding> articlePagingAdapter;
+    private final Lazy<PagingAdapter<Article, ArticleItemBinding>> lazyArticlePagingAdapter = new Lazy<>(
+            () -> new PagingAdapter<>(
+                    new ArticleDiffCallback(),
+                    (inflater, parent) -> ArticleItemBinding.inflate(inflater, parent, false),
+                    (articleItemBinding, article) -> {
+                        articleItemBinding.getRoot().setOnClickListener(v -> onArticleProfile(article));
+                        ImageRequest request = new ImageRequest.Builder(requireContext())
+                                .data(article.getImageUrl())
+                                .crossfade(true)
+                                .target(articleItemBinding.articleItemImage)
+                                .build();
+                        Coil.imageLoader(requireContext()).enqueue(request);
+                        articleItemBinding.articleItemSourceImage.setImageResource(article.getSourceDrawableId());
+                        articleItemBinding.articleItemSourceName.setText(article.getSourceName());
+                        articleItemBinding.articleItemTitle.setText(article.getTitle());
+                        return null;
+                    },
+                    parent -> LayoutInflater.from(parent.getContext()),
+                    message -> null
+            )
+    );
 
     @InjectPresenter(tag = NewsByCategoryPresenter.TAG)
     NewsByCategoryPresenter presenter;
@@ -59,6 +80,12 @@ public class NewsByCategoryFragment extends MvpAppCompatFragment implements News
                 .inject(this);
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter.initializeCategory(requireArguments().getString(CATEGORY_KEY));
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -71,27 +98,6 @@ public class NewsByCategoryFragment extends MvpAppCompatFragment implements News
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        articlePagingAdapter = new PagingAdapter<>(
-                new ArticleDiffCallback(),
-                (inflater, parent) -> ArticleItemBinding.inflate(inflater, parent, false),
-                (articleItemBinding, article) -> {
-                    articleItemBinding.getRoot().setOnClickListener(v -> onArticleProfile(article));
-                    ImageRequest request = new ImageRequest.Builder(requireContext())
-                            .data(article.getImageUrl())
-                            .crossfade(true)
-                            .target(articleItemBinding.articleItemImage)
-                            .build();
-                    Coil.imageLoader(requireContext()).enqueue(request);
-                    articleItemBinding.articleItemSourceImage.setImageResource(article.getSourceDrawableId());
-                    articleItemBinding.articleItemSourceName.setText(article.getSourceName());
-                    articleItemBinding.articleItemTitle.setText(article.getTitle());
-                    return null;
-                },
-                parent -> LayoutInflater.from(parent.getContext()),
-                message -> null
-        );
-
-        presenter.initializeCategory(requireArguments().getString(CATEGORY_KEY));
         setupRecyclerView();
         setupSwipeRefreshLayout();
     }
@@ -100,17 +106,16 @@ public class NewsByCategoryFragment extends MvpAppCompatFragment implements News
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        articlePagingAdapter = null;
     }
 
     private void setupRecyclerView() {
         binding.newsByCategoryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.newsByCategoryRecyclerView.setAdapter(articlePagingAdapter);
+        binding.newsByCategoryRecyclerView.setAdapter(lazyArticlePagingAdapter.get());
         binding.newsByCategoryRecyclerView.addItemDecoration(
                 new DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
         );
 
-        articlePagingAdapter.addOnLoadMoreListener(() -> {
+        lazyArticlePagingAdapter.get().addOnLoadMoreListener(() -> {
             presenter.onLoadNextPage();
             return Unit.INSTANCE;
         });
@@ -138,7 +143,7 @@ public class NewsByCategoryFragment extends MvpAppCompatFragment implements News
 
     @Override
     public void submitPage(PagingData<Article> page) {
-        articlePagingAdapter.submitPage(page);
+        lazyArticlePagingAdapter.get().submitPage(page);
     }
 
     @Override
