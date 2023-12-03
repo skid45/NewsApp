@@ -91,6 +91,7 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":core:paging"))
 
     // Data modules
     implementation(project(":data:filters"))
@@ -105,8 +106,6 @@ dependencies {
     implementation(project(":feature:saved"))
     implementation(project(":feature:error"))
     implementation(project(":feature:headlines"))
-
-    implementation(project(":paging"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -66,12 +66,12 @@ dependencies {
 
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":core:paging"))
 
     implementation(project(":data:filters"))
     implementation(project(":data:sources"))
     implementation(project(":data:news"))
 
-    implementation(project(":paging"))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
