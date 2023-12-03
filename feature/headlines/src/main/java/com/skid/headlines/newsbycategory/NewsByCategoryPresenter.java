@@ -12,6 +12,7 @@ import com.skid.headlines.HeadlinesRouter;
 import com.skid.news.model.Article;
 import com.skid.news.repository.NewsRepository;
 import com.skid.paging.Pager;
+import com.skid.paging.PagingData;
 import com.skid.utils.ExtensionsKt;
 
 import java.util.Calendar;
@@ -87,6 +88,9 @@ public class NewsByCategoryPresenter extends MvpPresenter<NewsByCategoryView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(pagingData -> {
+                    if (pagingData instanceof PagingData.Error) {
+                        onError(pagingData.getError());
+                    }
                     getViewState().showProgress(false);
                     getViewState().submitPage(pagingData);
                     getViewState().hideRefresh();
@@ -130,5 +134,9 @@ public class NewsByCategoryPresenter extends MvpPresenter<NewsByCategoryView> {
 
     void onArticleProfile(Article article) {
         router.onArticleProfile(article);
+    }
+
+    void onError(String message) {
+        router.onError(message);
     }
 }

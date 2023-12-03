@@ -40,7 +40,8 @@ class NewsByCategoryPagingSource @AssistedInject constructor(
 ) : PagingSource<Article>() {
 
     override fun loadPage(pageSize: Int, pageNumber: Int): Single<LoadResult<Article>> {
-        val sourcesSingle = sourcesDao.getSourcesByCategory(category, language)
+        val sourcesSingle = sourcesDao
+            .getSourcesByCategory(category, language)
             .flatMap { sources ->
                 if (sources.isEmpty()) {
                     sourcesService.getSourcesSingle()
@@ -55,90 +56,137 @@ class NewsByCategoryPagingSource @AssistedInject constructor(
             }
             .onErrorReturn { emptyList() }
 
-        val response = sourcesSingle.flatMap { sources ->
-            if (sources.isEmpty()) {
-                return@flatMap Single
-                    .just(LoadResult.Error(Exception(resourceWrapper.getString(R.string.something_went_wrong_try_later))))
-            }
-            newsService.getNews(
-                source = sources.take(20).map(SourceEntity::id).joinToString(","),
-                pageSize = pageSize,
-                page = pageNumber,
-                sortBy = sortBy,
-                from = from,
-                to = to
-            ).map { response ->
-                if (response.isSuccessful) {
-                    LoadResult.Page(
-                        data = response.body()!!.articles.map { articleDTO ->
-                            articleDTO.toCachedArticleEntity(category)
-                        },
-                        nextKey = pageNumber + 1
-                    )
-                } else {
-                    LoadResult.Error(Exception(resourceWrapper.getString(R.string.something_went_wrong_try_later)))
-                }
-            }.onErrorReturn { e ->
-                when (e) {
-                    is IOException -> LoadResult.Error(Exception(resourceWrapper.getString(R.string.no_internet_connection)))
-                    else -> LoadResult.Error(Exception(resourceWrapper.getString(R.string.something_went_wrong_try_later)))
-                }
-            }
-        }
-
-        return response.flatMap { loadResult ->
-            when (loadResult) {
-                is LoadResult.Page -> {
-                    if (pageNumber == initialPage) {
-                        sourcesSingle
-                            .doOnSuccess { sources ->
-                                cachedArticlesDao.deleteAllByCategory(
-                                    category = category,
-                                    sourceNames = sources.map(SourceEntity::name)
+        val response = sourcesSingle
+            .flatMap { sources ->
+                if (sources.isEmpty()) {
+                    return@flatMap Single
+                        .just(
+                            LoadResult.Error(
+                                Exception(
+                                    resourceWrapper
+                                        .getString(R.string.something_went_wrong_try_later)
                                 )
-                            }
-                            .subscribe()
-                    }
-                    cachedArticlesDao.insertArticles(loadResult.data)
-                    Single.just(
+                            )
+                        )
+                }
+                newsService.getNews(
+                    source = sources.take(20).map(SourceEntity::id).joinToString(","),
+                    pageSize = pageSize,
+                    page = pageNumber,
+                    sortBy = sortBy,
+                    from = from,
+                    to = to
+                ).map { response ->
+                    if (response.isSuccessful) {
                         LoadResult.Page(
-                            data = loadResult.data.map(CachedArticleEntity::toArticle),
+                            data = response.body()!!.articles.map { articleDTO ->
+                                articleDTO.toCachedArticleEntity(category)
+                            },
                             nextKey = pageNumber + 1
                         )
-                    )
-                }
-
-                is LoadResult.Error -> {
-                    sourcesSingle.flatMap { sources ->
-                        if (sources.isEmpty()) {
-                            Single.just(LoadResult.Page(emptyList<Article>(), pageNumber + 1))
-                        } else {
-                            cachedArticlesDao
-                                .getArticlesPageByCategory(
-                                    pageSize = pageSize,
-                                    pageNumber = pageNumber - initialPage,
-                                    category = category,
-                                    from = from?.parseToCalendar("yyyy MM dd")?.timeInMillis,
-                                    to = to?.parseToCalendar("yyyy MM dd")
-                                        ?.timeInMillis
-                                        ?.plus(TimeUnit.DAYS.toMillis(1)),
-                                    sourceNames = sources.map(SourceEntity::name)
+                    } else {
+                        when (response.code()) {
+                            426 -> {
+                                LoadResult.Page<CachedArticleEntity>(
+                                    data = emptyList(),
+                                    nextKey = pageNumber + 1
                                 )
-                                .map { cachedArticles ->
-                                    if (cachedArticles.isNotEmpty()) {
-                                        LoadResult.Page(
-                                            data = cachedArticles.map(CachedArticleEntity::toArticle),
-                                            nextKey = pageNumber + 1
-                                        )
-                                    } else {
-                                        LoadResult.Error(loadResult.e)
-                                    }
-                                }
+                            }
+
+                            429 -> {
+                                LoadResult.Error(
+                                    Exception(
+                                        resourceWrapper
+                                            .getString(R.string.too_many_requests_try_later)
+                                    )
+                                )
+                            }
+
+                            else -> {
+                                LoadResult.Error(
+                                    Exception(
+                                        resourceWrapper
+                                            .getString(R.string.something_went_wrong_try_later)
+                                    )
+                                )
+                            }
                         }
+                    }
+                }.onErrorReturn { e ->
+                    when (e) {
+                        is IOException -> LoadResult.Error(
+                            Exception(resourceWrapper.getString(R.string.no_internet_connection))
+                        )
+
+                        else -> LoadResult.Error(
+                            Exception(
+                                resourceWrapper.getString(R.string.something_went_wrong_try_later)
+                            )
+                        )
                     }
                 }
             }
-        }
+
+        return response
+            .flatMap { loadResult ->
+                when (loadResult) {
+                    is LoadResult.Page -> {
+                        if (pageNumber == initialPage) {
+                            sourcesSingle
+                                .doOnSuccess { sources ->
+                                    cachedArticlesDao.deleteAllByCategory(
+                                        category = category,
+                                        sourceNames = sources.map(SourceEntity::name)
+                                    )
+                                }
+                                .subscribe()
+                        }
+                        cachedArticlesDao.insertArticles(loadResult.data)
+                        Single.just(
+                            LoadResult.Page(
+                                data = loadResult.data.map(CachedArticleEntity::toArticle),
+                                nextKey = pageNumber + 1
+                            )
+                        )
+                    }
+
+                    is LoadResult.Error -> {
+                        sourcesSingle
+                            .flatMap { sources ->
+                                cachedArticlesDao
+                                    .isCacheEmpty()
+                                    .flatMap { isCacheEmpty ->
+                                        if (isCacheEmpty) {
+                                            Single.just(LoadResult.Error(loadResult.e))
+                                        } else {
+                                            cachedArticlesDao
+                                                .getArticlesPageByCategory(
+                                                    pageSize = pageSize,
+                                                    pageNumber = pageNumber - initialPage,
+                                                    category = category,
+                                                    from = from
+                                                        ?.parseToCalendar("yyyy MM dd")
+                                                        ?.timeInMillis,
+                                                    to = to
+                                                        ?.parseToCalendar("yyyy MM dd")
+                                                        ?.timeInMillis
+                                                        ?.plus(TimeUnit.DAYS.toMillis(1)),
+                                                    sourceNames = sources.map(SourceEntity::name)
+                                                )
+                                                .map { cachedArticles ->
+                                                    LoadResult.Page(
+                                                        data = cachedArticles.map(
+                                                            CachedArticleEntity::toArticle
+                                                        ),
+                                                        nextKey = pageNumber + 1
+                                                    )
+                                                }
+                                        }
+                                    }
+                            }
+                    }
+                }
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

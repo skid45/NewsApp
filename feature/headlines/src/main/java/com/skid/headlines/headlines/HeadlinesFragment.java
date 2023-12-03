@@ -1,5 +1,7 @@
 package com.skid.headlines.headlines;
 
+import static com.skid.utils.Constants.ERROR_RESULT_KEY;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -110,7 +112,7 @@ public class HeadlinesFragment extends MvpAppCompatFragment implements Headlines
                 (message) -> null
         );
 
-
+        setupErrorResultListener();
         setupPager();
         setupToolbar();
         setupRecyclerView();
@@ -158,7 +160,7 @@ public class HeadlinesFragment extends MvpAppCompatFragment implements Headlines
         ActionBar actionBar = ((AppCompatActivity) requireActivity())
                 .getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(com.skid.ui.R.string.sources);
+            actionBar.setTitle(com.skid.ui.R.string.headlines);
         }
 
         MenuHost menuHost = requireActivity();
@@ -205,6 +207,15 @@ public class HeadlinesFragment extends MvpAppCompatFragment implements Headlines
             return false;
         }
     };
+
+    private void setupErrorResultListener() {
+        getParentFragmentManager().setFragmentResultListener(
+                ERROR_RESULT_KEY,
+                getViewLifecycleOwner(),
+                (requestKey, result) -> getChildFragmentManager()
+                        .setFragmentResult(ERROR_RESULT_KEY, new Bundle())
+        );
+    }
 
     @Override
     public void submitPage(PagingData<Article> pagingData) {

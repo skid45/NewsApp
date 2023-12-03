@@ -1,6 +1,7 @@
 package com.skid.headlines.newsbycategory;
 
 import static com.skid.utils.Constants.CATEGORY_KEY;
+import static com.skid.utils.Constants.ERROR_RESULT_KEY;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,13 +16,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.skid.utils.Lazy;
 import com.skid.headlines.databinding.FragmentNewsByCategoryBinding;
 import com.skid.headlines.di.HeadlinesComponentViewModel;
 import com.skid.news.model.Article;
 import com.skid.paging.PagingAdapter;
 import com.skid.paging.PagingData;
 import com.skid.ui.databinding.ArticleItemBinding;
+import com.skid.utils.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -98,6 +99,7 @@ public class NewsByCategoryFragment extends MvpAppCompatFragment implements News
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setupErrorResultListener();
         setupRecyclerView();
         setupSwipeRefreshLayout();
     }
@@ -123,6 +125,17 @@ public class NewsByCategoryFragment extends MvpAppCompatFragment implements News
 
     private void setupSwipeRefreshLayout() {
         binding.newsByCategorySwipeRefreshLayout.setOnRefreshListener(() -> presenter.onRefresh());
+    }
+
+    private void setupErrorResultListener() {
+        getParentFragmentManager().setFragmentResultListener(
+                ERROR_RESULT_KEY,
+                getViewLifecycleOwner(),
+                (requestKey, result) -> {
+                    showProgress(true);
+                    presenter.onRefresh();
+                }
+        );
     }
 
     @Override
