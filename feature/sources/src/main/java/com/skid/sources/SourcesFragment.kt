@@ -73,6 +73,13 @@ class SourcesFragment : Fragment() {
         collectUiState()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (sourcesViewModel.uiState.value is SourcesUiState.Search) {
+            sourcesViewModel.onEvent(SourcesEvent.OnUpdateSources)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

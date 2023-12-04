@@ -24,15 +24,18 @@
         android:id="@+id/saved_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:indeterminateTint="?attr/colorPrimary" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/saved_search_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
         android:background="@color/primary_60"
         android:visibility="gone"
         tools:itemCount="3"
-        tools:listitem="@layout/article_item" />
+        tools:listitem="@layout/article_item"
+        tools:visibility="visible" />
 
 </FrameLayout>

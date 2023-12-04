@@ -9,10 +9,12 @@
         android:id="@+id/news_list_by_source_search_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
         android:background="@color/primary_60"
         android:visibility="gone"
         tools:itemCount="3"
-        tools:listitem="@layout/article_item" />
+        tools:listitem="@layout/article_item"
+        tools:visibility="visible" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/news_list_by_source_swipe_refresh_layout"
@@ -33,6 +35,7 @@
         android:id="@+id/news_list_by_source_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:indeterminateTint="?attr/colorPrimary" />
 
 </FrameLayout>
