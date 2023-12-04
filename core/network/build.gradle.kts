@@ -34,16 +34,15 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
+    implementation(Dependencies.androidxCore)
+    implementation(Dependencies.appcompat)
+    implementation(Dependencies.material)
 
-    val retrofitVersion = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion")
+    implementation(Dependencies.retrofit)
+    implementation(Dependencies.retrofitGsonConverter)
+    implementation(Dependencies.retrofitRxJava3Adapter)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation(Dependencies.jUnit)
+    androidTestImplementation(Dependencies.androidxJUnit)
+    androidTestImplementation(Dependencies.androidxEspresso)
 }

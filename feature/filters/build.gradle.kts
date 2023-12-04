@@ -39,30 +39,25 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
+    implementation(Dependencies.androidxCore)
+    implementation(Dependencies.appcompat)
+    implementation(Dependencies.material)
 
-    val daggerVersion = "2.48.1"
-    implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    implementation(Dependencies.dagger)
+    kapt(Dependencies.daggerCompiler)
 
-    val ciceroneVersion = "7.1"
-    implementation("com.github.terrakok:cicerone:$ciceroneVersion")
+    implementation(Dependencies.cicerone)
 
-    val fragmentVersion = "1.6.2"
-    implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
+    implementation(Dependencies.fragmentKtx)
 
-    val lifecycleVersion = "2.6.2"
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation(Dependencies.lifecycle)
 
+    implementation(project(Dependencies.coreUi))
+    implementation(project(Dependencies.coreUtils))
 
-    implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
+    implementation(project(Dependencies.dataFilters))
 
-    implementation(project(":data:filters"))
-
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation(Dependencies.jUnit)
+    androidTestImplementation(Dependencies.androidxJUnit)
+    androidTestImplementation(Dependencies.androidxEspresso)
 }

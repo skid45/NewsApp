@@ -39,41 +39,36 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
+    implementation(Dependencies.androidxCore)
+    implementation(Dependencies.appcompat)
+    implementation(Dependencies.material)
 
-    val daggerVersion = "2.48.1"
-    implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    implementation(Dependencies.dagger)
+    kapt(Dependencies.daggerCompiler)
 
-    val fragmentVersion = "1.6.2"
-    //noinspection KtxExtensionAvailable
-    implementation("androidx.fragment:fragment:$fragmentVersion")
+    implementation(Dependencies.fragment)
 
-    val rxJavaVersion = "3.1.8"
-    implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
-    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+    implementation(Dependencies.rxJava)
+    implementation(Dependencies.rxAndroid)
 
-    implementation("io.coil-kt:coil:2.5.0")
+    implementation(Dependencies.coil)
 
-    val moxyVersion = "2.2.2"
-    implementation ("com.github.moxy-community:moxy:$moxyVersion")
-    kapt("com.github.moxy-community:moxy-compiler:$moxyVersion")
-    implementation("com.github.moxy-community:moxy-androidx:$moxyVersion")
+    implementation(Dependencies.moxy)
+    kapt(Dependencies.moxyCompiler)
+    implementation(Dependencies.moxyAndroidx)
 
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation(Dependencies.swipeRefreshLayout)
 
-    implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:paging"))
+    implementation(project(Dependencies.coreUi))
+    implementation(project(Dependencies.coreUtils))
+    implementation(project(Dependencies.corePaging))
 
-    implementation(project(":data:filters"))
-    implementation(project(":data:sources"))
-    implementation(project(":data:news"))
+    implementation(project(Dependencies.dataFilters))
+    implementation(project(Dependencies.dataNews))
+    implementation(project(Dependencies.dataSources))
 
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation(Dependencies.jUnit)
+    androidTestImplementation(Dependencies.androidxJUnit)
+    androidTestImplementation(Dependencies.androidxEspresso)
 }

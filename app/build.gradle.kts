@@ -46,68 +46,58 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation(Dependencies.androidxCore)
+    implementation(Dependencies.appcompat)
+    implementation(Dependencies.material)
+    implementation(Dependencies.constraintLayout)
 
-    val lottieVersion = "6.1.0"
-    implementation("com.airbnb.android:lottie:$lottieVersion")
 
-    val daggerVersion = "2.48.1"
-    implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    implementation(Dependencies.lottie)
 
-    val retrofitVersion = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion")
+    implementation(Dependencies.dagger)
+    kapt(Dependencies.daggerCompiler)
 
-    val ciceroneVersion = "7.1"
-    implementation("com.github.terrakok:cicerone:$ciceroneVersion")
+    implementation(Dependencies.retrofit)
+    implementation(Dependencies.retrofitGsonConverter)
+    implementation(Dependencies.retrofitRxJava3Adapter)
 
-    val fragmentVersion = "1.6.2"
-    implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
+    implementation(Dependencies.cicerone)
 
-    val lifecycleVersion = "2.6.2"
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation(Dependencies.fragmentKtx)
 
-    val roomVersion = "2.6.0"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
+    implementation(Dependencies.lifecycle)
 
-    val rxJavaVersion = "3.1.8"
-    implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
-    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+    implementation(Dependencies.roomRuntime)
+    ksp(Dependencies.roomCompiler)
+    implementation(Dependencies.roomKtx)
 
-    val moxyVersion = "2.2.2"
-    implementation ("com.github.moxy-community:moxy:$moxyVersion")
-    kapt("com.github.moxy-community:moxy-compiler:$moxyVersion")
-    implementation("com.github.moxy-community:moxy-androidx:$moxyVersion")
+    implementation(Dependencies.rxJava)
+    implementation(Dependencies.rxAndroid)
 
-    // Core modules
-    implementation(project(":core:database"))
-    implementation(project(":core:network"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:paging"))
+    implementation(Dependencies.moxy)
+    kapt(Dependencies.moxyCompiler)
+    implementation(Dependencies.moxyAndroidx)
 
-    // Data modules
-    implementation(project(":data:filters"))
-    implementation(project(":data:sources"))
-    implementation(project(":data:news"))
 
-    // Feature modules
-    implementation(project(":feature:filters"))
-    implementation(project(":feature:sources"))
-    implementation(project(":feature:newslistbysource"))
-    implementation(project(":feature:article"))
-    implementation(project(":feature:saved"))
-    implementation(project(":feature:error"))
-    implementation(project(":feature:headlines"))
+    implementation(project(Dependencies.coreDatabase))
+    implementation(project(Dependencies.coreNetwork))
+    implementation(project(Dependencies.corePaging))
+    implementation(project(Dependencies.coreUi))
+    implementation(project(Dependencies.coreUtils))
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(project(Dependencies.dataFilters))
+    implementation(project(Dependencies.dataNews))
+    implementation(project(Dependencies.dataSources))
+
+    implementation(project(Dependencies.featureArticle))
+    implementation(project(Dependencies.featureError))
+    implementation(project(Dependencies.featureFilters))
+    implementation(project(Dependencies.featureHeadlines))
+    implementation(project(Dependencies.featureNewsListBySource))
+    implementation(project(Dependencies.featureSaved))
+    implementation(project(Dependencies.featureSources))
+
+    testImplementation(Dependencies.jUnit)
+    androidTestImplementation(Dependencies.androidxJUnit)
+    androidTestImplementation(Dependencies.androidxEspresso)
 }

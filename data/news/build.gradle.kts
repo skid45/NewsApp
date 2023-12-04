@@ -35,29 +35,26 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation(Dependencies.androidxCore)
+    implementation(Dependencies.appcompat)
 
-    val daggerVersion = "2.48.1"
-    implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    implementation(Dependencies.dagger)
+    kapt(Dependencies.daggerCompiler)
 
-    val retrofitVersion = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
-    implementation("com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion")
+    implementation(Dependencies.retrofit)
+    implementation(Dependencies.retrofitGsonConverter)
+    implementation(Dependencies.retrofitRxJava3Adapter)
 
-    val rxJavaVersion = "3.1.8"
-    implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
-    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+    implementation(Dependencies.rxJava)
+    implementation(Dependencies.rxAndroid)
 
-    implementation(project(":core:database"))
-    implementation(project(":core:network"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:paging"))
+    implementation(project(Dependencies.coreDatabase))
+    implementation(project(Dependencies.coreNetwork))
+    implementation(project(Dependencies.corePaging))
+    implementation(project(Dependencies.coreUi))
+    implementation(project(Dependencies.coreUtils))
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation(Dependencies.jUnit)
+    androidTestImplementation(Dependencies.androidxJUnit)
+    androidTestImplementation(Dependencies.androidxEspresso)
 }
