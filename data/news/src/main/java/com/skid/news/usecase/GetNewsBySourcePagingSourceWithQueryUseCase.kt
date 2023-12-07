@@ -20,12 +20,12 @@ class GetNewsBySourcePagingSourceWithQueryUseCase @Inject constructor(
             )
         } else {
             newsRepository.newsBySourcePagingSource(
-                query,
-                source,
-                null,
-                null,
-                null,
-                null
+                query = query,
+                source = source,
+                sortBy = null,
+                from = null,
+                to = null,
+                language = null
             )
         }
     }

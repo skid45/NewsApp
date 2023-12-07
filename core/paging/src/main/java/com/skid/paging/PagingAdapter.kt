@@ -3,7 +3,6 @@ package com.skid.paging
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.skid.paging.databinding.LoadingItemBinding
@@ -17,21 +16,31 @@ sealed class PagingAdapterItem<T> {
 }
 
 class PagingAdapter<T : Any, V : ViewBinding>(
-    diffCallback: DiffUtil.ItemCallback<T>,
+    private val diffCallback: DiffUtil.ItemCallback<T>,
     private val binding: (layoutInflater: LayoutInflater, parent: ViewGroup) -> V,
     private val bind: V.(item: T) -> Unit,
     private val layoutInflater: (parent: ViewGroup) -> LayoutInflater = { LayoutInflater.from(it.context) },
     private val doOnError: (message: String) -> Unit = {},
-) : ListAdapter<PagingAdapterItem<T>, RecyclerView.ViewHolder>(PagingDiffCallback(diffCallback)) {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var onLoadMoreListener: (() -> Unit)? = null
 
+    private var dataset = emptyList<PagingAdapterItem<T>>()
+        set(value) {
+            val diffUtilCallback = PagingDiffUtil(field, value, diffCallback)
+            val diffResult = DiffUtil.calculateDiff(diffUtilCallback)
+            field = value
+            diffResult.dispatchUpdatesTo(this)
+        }
+
     override fun getItemViewType(position: Int): Int {
-        return when (getItem(position)) {
+        return when (dataset[position]) {
             is PagingAdapterItem.Item -> ITEM_VIEW_TYPE
             is PagingAdapterItem.Loading -> LOADING_VIEW_TYPE
         }
     }
+
+    override fun getItemCount(): Int = dataset.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == ITEM_VIEW_TYPE) {
@@ -43,7 +52,7 @@ class PagingAdapter<T : Any, V : ViewBinding>(
 
     @Suppress("UNCHECKED_CAST")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (val item = getItem(position)) {
+        when (val item = dataset[position]) {
             is PagingAdapterItem.Item -> (holder as ItemViewHolder<V>).binding.bind(item.item)
             is PagingAdapterItem.Loading -> {
                 onLoadMoreListener?.invoke()
@@ -55,19 +64,17 @@ class PagingAdapter<T : Any, V : ViewBinding>(
         onLoadMoreListener = listener
     }
 
-    private fun submitList(list: MutableList<PagingAdapterItem<T>>?, isNewList: Boolean) {
-        if (!isNewList) {
-            val newList = currentList.toMutableList()
-            if (currentList.isNotEmpty() && currentList.last() is PagingAdapterItem.Loading) {
-                newList.removeLast()
+    private fun submitList(list: MutableList<PagingAdapterItem<T>>, isNewList: Boolean) {
+        dataset =
+            if (isNewList) list
+            else {
+                val mutableDataset = dataset.toMutableList()
+                if (dataset.isNotEmpty() && dataset.last() is PagingAdapterItem.Loading) {
+                    mutableDataset.removeLast()
+                }
+                mutableDataset.addAll(list)
+                mutableDataset
             }
-            if (list != null) {
-                newList.addAll(list)
-            }
-            submitList(newList)
-        } else {
-            submitList(list)
-        }
     }
 
     fun submitPage(pagingData: PagingData<T>) {
@@ -95,22 +102,27 @@ class PagingAdapter<T : Any, V : ViewBinding>(
         binding: LoadingItemBinding,
     ) : RecyclerView.ViewHolder(binding.root)
 
-    private class PagingDiffCallback<T : Any>(
+
+    private class PagingDiffUtil<T : Any>(
+        private val oldList: List<PagingAdapterItem<T>>,
+        private val newList: List<PagingAdapterItem<T>>,
         private val itemDiffCallback: DiffUtil.ItemCallback<T>,
-    ) : DiffUtil.ItemCallback<PagingAdapterItem<T>>() {
-        override fun areItemsTheSame(
-            oldItem: PagingAdapterItem<T>,
-            newItem: PagingAdapterItem<T>,
-        ): Boolean {
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
             return if (oldItem is PagingAdapterItem.Item && newItem is PagingAdapterItem.Item) {
                 itemDiffCallback.areItemsTheSame(oldItem.item, newItem.item)
             } else false
         }
 
-        override fun areContentsTheSame(
-            oldItem: PagingAdapterItem<T>,
-            newItem: PagingAdapterItem<T>,
-        ): Boolean {
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
             return if (oldItem is PagingAdapterItem.Item && newItem is PagingAdapterItem.Item) {
                 itemDiffCallback.areContentsTheSame(oldItem.item, newItem.item)
             } else false

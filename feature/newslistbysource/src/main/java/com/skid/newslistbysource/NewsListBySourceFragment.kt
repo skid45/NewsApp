@@ -43,7 +43,12 @@ class NewsListBySourceFragment : Fragment() {
 
     @Inject
     lateinit var viewModelProvider: Provider<NewsListBySourceViewModel.Factory>
-    private val newsListBySourceViewModel: NewsListBySourceViewModel by viewModels { viewModelProvider.get() }
+    private val newsListBySourceViewModel: NewsListBySourceViewModel by viewModels {
+        NewsListBySourceViewModel.viewModelFactory(
+            assistedFactory = viewModelProvider.get(),
+            sourceId = checkNotNull(requireArguments().getString(SOURCE_ID_KEY))
+        )
+    }
 
     @Inject
     lateinit var router: NewsListBySourceRouter
@@ -95,8 +100,6 @@ class NewsListBySourceFragment : Fragment() {
             .get<NewsListBySourceComponentViewModel>()
             .newsListBySourceComponent
             .inject(this)
-
-        newsListBySourceViewModel.onSourceIdChanged(requireArguments().getString(SOURCE_ID_KEY))
     }
 
     override fun onCreateView(
@@ -138,8 +141,10 @@ class NewsListBySourceFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        (requireActivity() as AppCompatActivity).supportActionBar?.title =
-            requireArguments().getString(SOURCE_NAME_KEY)
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            title = requireArguments().getString(SOURCE_NAME_KEY)
+            setDisplayHomeAsUpEnabled(true)
+        }
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(menuProvider, viewLifecycleOwner, Lifecycle.State.RESUMED)
@@ -198,7 +203,8 @@ class NewsListBySourceFragment : Fragment() {
     }
 
     private fun setupNewsPagerObserver() = with(binding) {
-        val disposable = newsListBySourceViewModel.newsPagerObservable
+        val disposable = newsListBySourceViewModel
+            .pagingDataReplaySubject
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { pagingData ->

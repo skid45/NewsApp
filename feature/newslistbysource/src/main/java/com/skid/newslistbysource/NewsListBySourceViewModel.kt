@@ -2,6 +2,7 @@ package com.skid.newslistbysource
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.skid.filters.model.Filters
 import com.skid.filters.model.Language
 import com.skid.filters.model.Sorting
 import com.skid.filters.repository.FiltersRepository
@@ -9,69 +10,84 @@ import com.skid.news.model.Article
 import com.skid.news.repository.NewsRepository
 import com.skid.news.usecase.GetNewsBySourcePagingSourceWithQueryUseCase
 import com.skid.paging.Pager
+import com.skid.paging.PagingData
 import com.skid.utils.Constants.PAGE_SIZE
 import com.skid.utils.asObservable
 import com.skid.utils.format
-import io.reactivex.rxjava3.core.Observable
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.ReplaySubject
 import java.util.Calendar
-import javax.inject.Inject
-import javax.inject.Provider
+import java.util.concurrent.TimeUnit
 
-class NewsListBySourceViewModel @Inject constructor(
+class NewsListBySourceViewModel @AssistedInject constructor(
     private val newsRepository: NewsRepository,
     filtersRepository: FiltersRepository,
     private val getNewsBySourcePagingSourceWithQueryUseCase: GetNewsBySourcePagingSourceWithQueryUseCase,
+    @Assisted private val sourceId: String,
 ) : ViewModel() {
 
     private val disposables = CompositeDisposable()
 
-    private val sourceId = BehaviorSubject.create<String?>()
-
     private val pager = BehaviorSubject
-        .createDefault(getNewPager(source = sourceId.value))
+        .createDefault(getNewPager(source = sourceId))
 
-    val newsPagerObservable = pager
-        .switchMap { pager -> pager.loadNextPage() }
+    val pagingDataReplaySubject = ReplaySubject.create<PagingData<Article>>()
 
-    private val combinedParameters = Observable
-        .combineLatest(
-            sourceId,
-            filtersRepository.getFilters().asObservable()
-        ) { source, filters ->
-            pager.onNext(
-                getNewPager(
-                    source = source,
-                    sortBy = filters.sortBy,
-                    chosenDates = filters.chosenDates,
-                    language = filters.language
-                )
-            )
-        }
+    private val filters = BehaviorSubject.create<Filters>()
+
 
     private val query = BehaviorSubject.create<String?>()
 
     private val searchPager = BehaviorSubject
-        .createDefault(getNewPager(query = query.value, source = sourceId.value))
+        .createDefault(getNewPagerWithQuery(query = query.value, source = sourceId))
 
     val searchPagerObservable = searchPager
         .switchMap { pager -> pager.loadNextPage() }
 
-    private val combinedSearchPagerParameters = Observable
-        .combineLatest(query, sourceId) { query, source ->
-            searchPager.onNext(getNewPagerWithQuery(query = query, source = source))
-        }
-
     init {
-        val disposable = combinedParameters.subscribe()
-        val searchDisposable = combinedSearchPagerParameters.subscribe()
-        disposables.add(disposable)
-        disposables.add(searchDisposable)
+        disposables.add(
+            filtersRepository
+                .getFilters()
+                .asObservable()
+                .subscribe(this.filters::onNext)
+        )
+
+        disposables.add(
+            filters.subscribe { filters ->
+                pagingDataReplaySubject.cleanupBuffer()
+                pager.onNext(
+                    getNewPager(
+                        source = sourceId,
+                        sortBy = filters.sortBy,
+                        chosenDates = filters.chosenDates,
+                        language = filters.language
+                    )
+                )
+            }
+        )
+
+        disposables.add(
+            pager
+                .switchMap { pager -> pager.loadNextPage() }
+                .subscribe { pagingData ->
+                    pagingDataReplaySubject.onNext(pagingData)
+                }
+        )
+
+        disposables.add(
+            query
+                .debounce(200, TimeUnit.MILLISECONDS)
+                .subscribe { query ->
+                    searchPager.onNext(getNewPagerWithQuery(query, sourceId))
+                }
+        )
     }
 
     private fun getNewPager(
-        query: String? = null,
         source: String? = null,
         sortBy: Sorting? = null,
         chosenDates: Pair<Calendar, Calendar>? = null,
@@ -82,7 +98,7 @@ class NewsListBySourceViewModel @Inject constructor(
             initialPage = 1,
             pagingSourceFactory = {
                 newsRepository.newsBySourcePagingSource(
-                    query = query,
+                    query = null,
                     source = source,
                     sortBy = sortBy?.apiName,
                     from = chosenDates?.first?.format("yyyy MM dd"),
@@ -106,12 +122,9 @@ class NewsListBySourceViewModel @Inject constructor(
         )
     }
 
-    fun onSourceIdChanged(sourceId: String?) {
-        this.sourceId.onNext(sourceId)
-    }
-
     fun refreshPager() {
-        sourceId.onNext(sourceId.value)
+        pagingDataReplaySubject.cleanupBuffer()
+        filters.onNext(filters.value)
     }
 
     fun onLoadNextPage() {
@@ -131,13 +144,22 @@ class NewsListBySourceViewModel @Inject constructor(
         disposables.clear()
     }
 
-    @Suppress("UNCHECKED_CAST")
-    class Factory @Inject constructor(
-        private val viewModelProvider: Provider<NewsListBySourceViewModel>,
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            require(modelClass == NewsListBySourceViewModel::class.java)
-            return viewModelProvider.get() as T
+    companion object {
+        @Suppress("UNCHECKED_CAST")
+        fun viewModelFactory(
+            assistedFactory: Factory,
+            sourceId: String,
+        ): ViewModelProvider.Factory {
+            return object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return assistedFactory.create(sourceId) as T
+                }
+            }
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(sourceId: String): NewsListBySourceViewModel
     }
 }
