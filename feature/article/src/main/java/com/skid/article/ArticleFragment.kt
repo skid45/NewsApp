@@ -38,7 +38,12 @@ class ArticleFragment : Fragment() {
 
     @Inject
     lateinit var viewModelProvider: Provider<ArticleViewModel.Factory>
-    private val articleViewModel: ArticleViewModel by viewModels { viewModelProvider.get() }
+    private val articleViewModel: ArticleViewModel by viewModels {
+        ArticleViewModel.viewModelFactory(
+            assistedFactory = viewModelProvider.get(),
+            url = article.url
+        )
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,8 +52,6 @@ class ArticleFragment : Fragment() {
             .get<ArticleComponentViewModel>()
             .articleComponent
             .inject(this)
-
-        articleViewModel.onUrlChanged(article.url)
     }
 
     override fun onResume() {
