@@ -9,10 +9,12 @@
         android:id="@+id/sources_search_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
         android:background="@color/primary_60"
         android:visibility="gone"
         tools:itemCount="3"
-        tools:listitem="@layout/sources_item" />
+        tools:listitem="@layout/sources_item"
+        tools:visibility="visible" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/sources_swipe_refresh_layout"
