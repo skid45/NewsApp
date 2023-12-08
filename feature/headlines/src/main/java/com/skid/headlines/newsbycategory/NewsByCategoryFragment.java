@@ -64,11 +64,11 @@ public class NewsByCategoryFragment extends MvpAppCompatFragment implements News
     NewsByCategoryPresenter presenter;
 
     @Inject
-    Provider<NewsByCategoryPresenter> presenterProvider;
+    Provider<NewsByCategoryPresenter.Factory> presenterFactoryProvider;
 
     @ProvidePresenter(tag = NewsByCategoryPresenter.TAG)
     NewsByCategoryPresenter providePresenter() {
-        return presenterProvider.get();
+        return presenterFactoryProvider.get().create(requireArguments().getString(CATEGORY_KEY));
     }
 
     @Override
@@ -79,12 +79,6 @@ public class NewsByCategoryFragment extends MvpAppCompatFragment implements News
                 .get(HeadlinesComponentViewModel.class)
                 .getHeadlinesComponent()
                 .inject(this);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        presenter.initializeCategory(requireArguments().getString(CATEGORY_KEY));
     }
 
     @Nullable

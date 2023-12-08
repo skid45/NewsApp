@@ -5,6 +5,7 @@ import static com.skid.utils.Constants.PAGE_SIZE;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.skid.filters.model.Filters;
 import com.skid.filters.model.Language;
 import com.skid.filters.model.Sorting;
 import com.skid.filters.repository.FiltersRepository;
@@ -18,15 +19,14 @@ import com.skid.utils.ExtensionsKt;
 import java.util.Calendar;
 import java.util.Locale;
 
-import javax.inject.Inject;
-
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedFactory;
+import dagger.assisted.AssistedInject;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import kotlin.Pair;
-import kotlin.Unit;
 import moxy.MvpPresenter;
 
 public class NewsByCategoryPresenter extends MvpPresenter<NewsByCategoryView> {
@@ -41,20 +41,26 @@ public class NewsByCategoryPresenter extends MvpPresenter<NewsByCategoryView> {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
-    private final BehaviorSubject<String> category = BehaviorSubject.createDefault("");
+    private final String category;
 
-    private final BehaviorSubject<Pager<Article>> pager = BehaviorSubject
-            .createDefault(getNewPager(category.getValue(), null, null, null));
+    private final BehaviorSubject<Pager<Article>> pager;
 
-    @Inject
+    private final BehaviorSubject<Filters> filters = BehaviorSubject.create();
+
+    @AssistedInject
     public NewsByCategoryPresenter(
             NewsRepository newsRepository,
             FiltersRepository filtersRepository,
-            HeadlinesRouter router
+            HeadlinesRouter router,
+            @Assisted String category
     ) {
         this.newsRepository = newsRepository;
         this.filtersRepository = filtersRepository;
         this.router = router;
+        this.category = category;
+
+        this.pager = BehaviorSubject
+                .createDefault(getNewPager(category, null, null, null));
     }
 
     @Override
@@ -62,25 +68,22 @@ public class NewsByCategoryPresenter extends MvpPresenter<NewsByCategoryView> {
         super.onFirstViewAttach();
         getViewState().showProgress(true);
 
-        disposables.add(Observable
-                .combineLatest(
-                        category,
-                        ExtensionsKt.asObservable(filtersRepository.getFilters()),
-                        (category, filters) -> {
-                            pager.onNext(
-                                    getNewPager(
-                                            category,
-                                            filters.getSortBy(),
-                                            filters.getChosenDates(),
-                                            filters.getLanguage()
-                                    )
-                            );
-                            return Unit.INSTANCE;
-                        }
-                )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+        disposables.add(
+                ExtensionsKt.asObservable(filtersRepository.getFilters())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(this.filters::onNext)
+        );
+
+        disposables.add(
+                filters.subscribe(filters -> pager.onNext(
+                        getNewPager(
+                                category,
+                                filters.getSortBy(),
+                                filters.getChosenDates(),
+                                filters.getLanguage()
+                        )
+                ))
         );
 
         disposables.add(pager
@@ -120,12 +123,8 @@ public class NewsByCategoryPresenter extends MvpPresenter<NewsByCategoryView> {
         ));
     }
 
-    void initializeCategory(String category) {
-        this.category.onNext(category);
-    }
-
     void onRefresh() {
-        category.onNext(category.getValue());
+        filters.onNext(filters.getValue());
     }
 
     void onLoadNextPage() {
@@ -138,5 +137,11 @@ public class NewsByCategoryPresenter extends MvpPresenter<NewsByCategoryView> {
 
     void onError(String message) {
         router.onError(message);
+    }
+
+
+    @AssistedFactory
+    interface Factory {
+        NewsByCategoryPresenter create(String category);
     }
 }
