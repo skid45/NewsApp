@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -39,7 +39,7 @@ dependencies {
     implementation(Dependencies.appcompat)
 
     implementation(Dependencies.dagger)
-    kapt(Dependencies.daggerCompiler)
+    ksp(Dependencies.daggerCompiler)
 
     implementation(Dependencies.retrofit)
     implementation(Dependencies.retrofitGsonConverter)

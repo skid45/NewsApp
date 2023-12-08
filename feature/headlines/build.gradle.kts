@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -44,7 +45,7 @@ dependencies {
     implementation(Dependencies.material)
 
     implementation(Dependencies.dagger)
-    kapt(Dependencies.daggerCompiler)
+    ksp(Dependencies.daggerCompiler)
 
     implementation(Dependencies.fragment)
 

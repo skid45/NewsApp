@@ -55,7 +55,7 @@ dependencies {
     implementation(Dependencies.lottie)
 
     implementation(Dependencies.dagger)
-    kapt(Dependencies.daggerCompiler)
+    ksp(Dependencies.daggerCompiler)
 
     implementation(Dependencies.retrofit)
     implementation(Dependencies.retrofitGsonConverter)
