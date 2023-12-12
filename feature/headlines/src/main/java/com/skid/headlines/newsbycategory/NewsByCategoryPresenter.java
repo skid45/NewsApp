@@ -45,7 +45,8 @@ public class NewsByCategoryPresenter extends MvpPresenter<NewsByCategoryView> {
 
     private final BehaviorSubject<Pager<Article>> pager;
 
-    private final BehaviorSubject<Filters> filters = BehaviorSubject.create();
+    private final BehaviorSubject<Filters> filters = BehaviorSubject
+            .createDefault(new Filters(Sorting.NEW, null, null, 0));
 
     @AssistedInject
     public NewsByCategoryPresenter(

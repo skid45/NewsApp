@@ -11,7 +11,6 @@ import com.skid.utils.ResourceWrapper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.IOException
@@ -67,7 +66,6 @@ class NewsBySourcePagingSource @AssistedInject constructor(
                 }
             }
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
     }
 
 
