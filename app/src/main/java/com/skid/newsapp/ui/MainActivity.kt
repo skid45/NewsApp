@@ -15,16 +15,22 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
+import com.github.terrakok.cicerone.androidx.FragmentScreen
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.badge.ExperimentalBadgeUtils
+import com.skid.headlines.headlines.HeadlinesFragment
 import com.skid.newsapp.R
 import com.skid.newsapp.appComponent
 import com.skid.newsapp.databinding.ActivityMainBinding
 import com.skid.newsapp.ui.navigation.Screens
+import com.skid.saved.SavedFragment
+import com.skid.sources.SourcesFragment
 import com.skid.utils.Constants.SELECTED_ITEM_ID_KEY
 import com.skid.utils.collectFlow
 import com.skid.utils.resolveAttributeColor
@@ -46,7 +52,24 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModelProvider: Provider<MainViewModel.Factory>
     private val mainViewModel: MainViewModel by viewModels { viewModelProvider.get() }
 
-    private val navigator = AppNavigator(this, R.id.activity_main_fragment_container_view)
+    private val navigator =
+        object : AppNavigator(this, R.id.activity_main_fragment_container_view) {
+            override fun setupFragmentTransaction(
+                screen: FragmentScreen,
+                fragmentTransaction: FragmentTransaction,
+                currentFragment: Fragment?,
+                nextFragment: Fragment,
+            ) {
+                if (nextFragment::class !in bottomBarFragmentsSet) {
+                    fragmentTransaction.setCustomAnimations(
+                        /* enter = */ com.skid.ui.R.anim.slide_in_right,
+                        /* exit = */ com.skid.ui.R.anim.slide_out_left,
+                        /* popEnter = */ com.skid.ui.R.anim.slide_in_left,
+                        /* popExit = */ com.skid.ui.R.anim.slide_out_right
+                    )
+                }
+            }
+        }
 
     private var filtersBadgeDrawable: BadgeDrawable? = null
 
@@ -182,3 +205,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+
+private val bottomBarFragmentsSet = setOf(
+    HeadlinesFragment::class,
+    SavedFragment::class,
+    SourcesFragment::class
+)
