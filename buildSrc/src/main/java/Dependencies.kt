@@ -11,6 +11,7 @@ object Dependencies {
     const val androidxJUnit = "androidx.test.ext:junit:${Versions.androidxJUnitVersion}"
     const val androidxEspresso =
         "androidx.test.espresso:espresso-core:${Versions.androidxEspressoVersion}"
+    const val mockk = "io.mockk:mockk:${Versions.mockkVersion}"
 
     const val lottie = "com.airbnb.android:lottie:${Versions.lottieVersion}"
 
