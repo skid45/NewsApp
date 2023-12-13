@@ -7,6 +7,7 @@ import com.skid.news.mapper.toSavedArticleEntity
 import com.skid.news.model.Article
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SavedArticlesRepositoryImpl @Inject constructor(
@@ -28,7 +29,7 @@ class SavedArticlesRepositoryImpl @Inject constructor(
     override suspend fun getAllArticles(chosenDates: Pair<Calendar, Calendar>?): List<Article> {
         return savedArticlesDao.getAllArticles(
             chosenDates?.first?.timeInMillis,
-            chosenDates?.second?.timeInMillis
+            chosenDates?.second?.timeInMillis?.plus(TimeUnit.DAYS.toMillis(1))
         ).map(SavedArticleEntity::toArticle)
     }
 
