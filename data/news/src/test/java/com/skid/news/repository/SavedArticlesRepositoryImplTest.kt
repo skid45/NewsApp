@@ -24,6 +24,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 class SavedArticlesRepositoryImplTest {
 
@@ -247,11 +248,15 @@ class SavedArticlesRepositoryImplTest {
         coEvery {
             savedArticlesDao.getAllArticles(
                 chosenDates.first.timeInMillis,
-                chosenDates.second.timeInMillis
+                chosenDates.second.timeInMillis.plus(TimeUnit.DAYS.toMillis(1))
             )
         } returns savedArticlesDB.filter { savedArticleEntity ->
             savedArticleEntity.publishedAt.timeInMillis in
-                    chosenDates.first.timeInMillis..chosenDates.second.timeInMillis
+                    chosenDates.first.timeInMillis..chosenDates.second.timeInMillis.plus(
+                TimeUnit.DAYS.toMillis(
+                    1
+                )
+            )
         }
 
         val result = runBlocking { savedArticlesRepositoryImpl.getAllArticles(chosenDates) }
@@ -259,7 +264,7 @@ class SavedArticlesRepositoryImplTest {
         coVerify {
             savedArticlesDao.getAllArticles(
                 chosenDates.first.timeInMillis,
-                chosenDates.second.timeInMillis
+                chosenDates.second.timeInMillis.plus(TimeUnit.DAYS.toMillis(1))
             )
         }
         assertTrue(result.isEmpty())
@@ -282,18 +287,19 @@ class SavedArticlesRepositoryImplTest {
                 every { publishedAt } returns Calendar.getInstance().apply { timeInMillis = 180 }
             },
             mockk(relaxed = true) {
-                every { publishedAt } returns Calendar.getInstance().apply { timeInMillis = 280 }
+                every { publishedAt } returns Calendar.getInstance().apply { timeInMillis = 280 + TimeUnit.DAYS.toMillis(1) }
             }
         )
         savedArticlesDB.addAll(mockSavedArticleEntityList)
         coEvery {
             savedArticlesDao.getAllArticles(
                 chosenDates.first.timeInMillis,
-                chosenDates.second.timeInMillis
+                chosenDates.second.timeInMillis.plus(TimeUnit.DAYS.toMillis(1))
             )
         } returns savedArticlesDB.filter { savedArticleEntity ->
             savedArticleEntity.publishedAt.timeInMillis in
                     chosenDates.first.timeInMillis..chosenDates.second.timeInMillis
+                .plus(TimeUnit.DAYS.toMillis(1))
         }
 
         val result = runBlocking { savedArticlesRepositoryImpl.getAllArticles(chosenDates) }
@@ -301,7 +307,7 @@ class SavedArticlesRepositoryImplTest {
         coVerify {
             savedArticlesDao.getAllArticles(
                 chosenDates.first.timeInMillis,
-                chosenDates.second.timeInMillis
+                chosenDates.second.timeInMillis.plus(TimeUnit.DAYS.toMillis(1))
             )
         }
         assertTrue(result.isNotEmpty())
@@ -310,6 +316,7 @@ class SavedArticlesRepositoryImplTest {
                 .filter { savedArticleEntity ->
                     savedArticleEntity.publishedAt.timeInMillis in
                             chosenDates.first.timeInMillis..chosenDates.second.timeInMillis
+                        .plus(TimeUnit.DAYS.toMillis(1))
                 }
                 .map(SavedArticleEntity::toArticle),
             result

@@ -94,10 +94,11 @@ public class NewsByCategoryPresenter extends MvpPresenter<NewsByCategoryView> {
                 .subscribe(pagingData -> {
                     if (pagingData instanceof PagingData.Error) {
                         onError(pagingData.getError());
+                    } else {
+                        getViewState().showProgress(false);
+                        getViewState().submitPage(pagingData);
+                        getViewState().hideRefresh();
                     }
-                    getViewState().showProgress(false);
-                    getViewState().submitPage(pagingData);
-                    getViewState().hideRefresh();
                 })
         );
     }
@@ -124,19 +125,19 @@ public class NewsByCategoryPresenter extends MvpPresenter<NewsByCategoryView> {
         ));
     }
 
-    void onRefresh() {
+    public void onRefresh() {
         filters.onNext(filters.getValue());
     }
 
-    void onLoadNextPage() {
+    public void onLoadNextPage() {
         pager.onNext(pager.getValue());
     }
 
-    void onArticleProfile(Article article) {
+    public void onArticleProfile(Article article) {
         router.onArticleProfile(article);
     }
 
-    void onError(String message) {
+    public void onError(String message) {
         router.onError(message);
     }
 
