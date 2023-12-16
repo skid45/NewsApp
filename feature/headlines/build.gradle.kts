@@ -1,8 +1,9 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    kotlin("kapt")
-    id("com.google.devtools.ksp")
+    id(Plugins.androidLibrary)
+    id(Plugins.kotlinAndroid)
+    kotlin(Plugins.kapt)
+    id(Plugins.ksp)
+    id(Plugins.kover)
 }
 
 android {

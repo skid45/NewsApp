@@ -95,18 +95,6 @@ fun <T : Any> Flow<T>.asObservable(): Observable<T> {
     }
 }
 
-fun <T : Any> Flow<T?>.asObservable(ifNull: () -> T): Observable<T> {
-    return Observable.create { emitter ->
-        onEach { value ->
-            emitter.onNext(value ?: ifNull())
-        }.catch { e ->
-            emitter.onError(e)
-        }.onCompletion {
-            emitter.onComplete()
-        }.launchIn(CoroutineScope(Dispatchers.Default))
-    }
-}
-
 @Suppress("DEPRECATION")
 inline fun <reified T : Serializable> Bundle.customGetSerializable(key: String): T? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

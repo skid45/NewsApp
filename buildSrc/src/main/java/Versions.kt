@@ -20,4 +20,10 @@ object Versions {
     const val javaxInject = "1"
     const val coilVersion = "2.5.0"
     const val swipeRefreshLayoutVersion = "1.1.0"
+
+    //plugins
+    const val AGPVersion = "8.0.2"
+    const val kotlinVersion = "1.9.0"
+    const val kspVersion = "1.9.0-1.0.12"
+    const val koverVersion = "0.7.5"
 }

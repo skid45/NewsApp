@@ -1,8 +1,9 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    kotlin("kapt")
-    id("com.google.devtools.ksp")
+    id(Plugins.androidApplication)
+    id(Plugins.kotlinAndroid)
+    kotlin(Plugins.kapt)
+    id(Plugins.ksp)
+    id(Plugins.kover)
 }
 
 android {
@@ -100,4 +101,22 @@ dependencies {
     testImplementation(Dependencies.jUnit)
     androidTestImplementation(Dependencies.androidxJUnit)
     androidTestImplementation(Dependencies.androidxEspresso)
+
+    kover(project(Dependencies.coreDatabase))
+    kover(project(Dependencies.coreNetwork))
+    kover(project(Dependencies.corePaging))
+    kover(project(Dependencies.coreUi))
+    kover(project(Dependencies.coreUtils))
+
+    kover(project(Dependencies.dataFilters))
+    kover(project(Dependencies.dataNews))
+    kover(project(Dependencies.dataSources))
+
+    kover(project(Dependencies.featureArticle))
+    kover(project(Dependencies.featureError))
+    kover(project(Dependencies.featureFilters))
+    kover(project(Dependencies.featureHeadlines))
+    kover(project(Dependencies.featureNewsListBySource))
+    kover(project(Dependencies.featureSaved))
+    kover(project(Dependencies.featureSources))
 }
