@@ -120,3 +120,15 @@ dependencies {
     kover(project(Dependencies.featureSaved))
     kover(project(Dependencies.featureSources))
 }
+
+koverReport {
+    androidReports("release") {
+        filters {
+            excludes {
+                packages("com.skid.*.databinding")
+                classes("*_*")
+                annotatedBy("DaggerGenerated", "*Generated*")
+            }
+        }
+    }
+}

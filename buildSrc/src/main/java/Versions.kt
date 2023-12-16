@@ -7,6 +7,7 @@ object Versions {
     const val androidxJUnitVersion = "1.1.5"
     const val androidxEspressoVersion = "3.5.1"
     const val mockkVersion = "1.13.8"
+    const val jUnitParamsVersion = "1.1.1"
     const val lottieVersion = "6.1.0"
     const val daggerVersion = "2.49"
     const val retrofitVersion = "2.9.0"

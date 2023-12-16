@@ -12,6 +12,8 @@ object Dependencies {
     const val androidxEspresso =
         "androidx.test.espresso:espresso-core:${Versions.androidxEspressoVersion}"
     const val mockk = "io.mockk:mockk:${Versions.mockkVersion}"
+    const val jUnitParams = "pl.pragmatists:JUnitParams:${Versions.jUnitParamsVersion}"
+
 
     const val lottie = "com.airbnb.android:lottie:${Versions.lottieVersion}"
 
