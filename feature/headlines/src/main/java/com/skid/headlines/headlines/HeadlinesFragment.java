@@ -33,6 +33,7 @@ import com.skid.headlines.newsbycategory.ArticleDiffCallback;
 import com.skid.news.model.Article;
 import com.skid.paging.PagingAdapter;
 import com.skid.paging.PagingData;
+import com.skid.ui.ExtensionsKt;
 import com.skid.ui.databinding.ArticleItemBinding;
 
 import javax.inject.Inject;
@@ -96,7 +97,10 @@ public class HeadlinesFragment extends MvpAppCompatFragment implements Headlines
                 new ArticleDiffCallback(),
                 ((inflater, parent) -> ArticleItemBinding.inflate(inflater, parent, false)),
                 ((articleItemBinding, article) -> {
-                    articleItemBinding.getRoot().setOnClickListener(v -> onArticleProfile(article));
+                    articleItemBinding.getRoot().setOnClickListener(v -> {
+                        ExtensionsKt.onSearchItemCollapseInDarkTheme(this);
+                        onArticleProfile(article);
+                    });
                     ImageRequest request = new ImageRequest.Builder(requireContext())
                             .data(article.getImageUrl())
                             .crossfade(true)
@@ -187,19 +191,7 @@ public class HeadlinesFragment extends MvpAppCompatFragment implements Headlines
                 });
             }
 
-            searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-                @Override
-                public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
-                    onSearchExpand();
-                    return true;
-                }
-
-                @Override
-                public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
-                    onSearchCollapse();
-                    return true;
-                }
-            });
+            searchItem.setOnActionExpandListener(searchItemOnActionExpandListener);
         }
 
         @Override
@@ -207,6 +199,19 @@ public class HeadlinesFragment extends MvpAppCompatFragment implements Headlines
             return false;
         }
     };
+
+    private final MenuItem.OnActionExpandListener searchItemOnActionExpandListener =
+            ExtensionsKt.searchItemOnActionExpandListener(
+                    this,
+                    (item) -> {
+                        onSearchExpand();
+                        return Unit.INSTANCE;
+                    },
+                    (item) -> {
+                        onSearchCollapse();
+                        return Unit.INSTANCE;
+                    }
+            );
 
     private void setupErrorResultListener() {
         getParentFragmentManager().setFragmentResultListener(

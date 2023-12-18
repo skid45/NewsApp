@@ -1,7 +1,15 @@
-<resources>
-    <!-- Base application theme. -->
-    <style name="Theme.NewsApp" parent="Base.Theme.NewsApp">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.NewsApp" parent="Base.Theme.NewsApp" />
+
+    <style name="Theme.SplashScreen" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <item name="android:colorBackground">@color/neutral_10</item>
+        <item name="android:statusBarColor">@color/neutral_10</item>
+        <item name="android:navigationBarColor">@color/neutral_10</item>
+
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@color/neutral_10
+        </item>
+        <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="s">0</item>
     </style>
 </resources>

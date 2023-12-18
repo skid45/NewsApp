@@ -26,6 +26,8 @@ import com.skid.newslist.databinding.FragmentNewsListBySourceBinding
 import com.skid.newslistbysource.di.NewsListBySourceComponentViewModel
 import com.skid.paging.PagingAdapter
 import com.skid.ui.databinding.ArticleItemBinding
+import com.skid.ui.onSearchItemCollapseInDarkTheme
+import com.skid.ui.searchItemOnActionExpandListener
 import com.skid.utils.Constants
 import com.skid.utils.Constants.SOURCE_ID_KEY
 import com.skid.utils.Constants.SOURCE_NAME_KEY
@@ -82,7 +84,10 @@ class NewsListBySourceFragment : Fragment() {
                 ArticleItemBinding.inflate(layoutInflater, parent, false)
             },
             bind = { article ->
-                root.setOnClickListener { router.toArticleProfile(article) }
+                root.setOnClickListener {
+                    onSearchItemCollapseInDarkTheme()
+                    router.toArticleProfile(article)
+                }
                 articleItemImage.load(article.imageUrl) {
                     crossfade(true)
                 }
@@ -165,32 +170,27 @@ class NewsListBySourceFragment : Fragment() {
                     }
                 }
             )
-            searchItem.setOnActionExpandListener(
-                object : MenuItem.OnActionExpandListener {
-                    override fun onMenuItemActionExpand(p0: MenuItem): Boolean {
-                        searchDisposable = newsListBySourceViewModel
-                            .searchPagerObservable
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(newsSearchAdapter::submitPage)
+            with(binding) {
+                searchItem.setOnActionExpandListener(
+                    searchItemOnActionExpandListener(
+                        onExpand = {
+                            searchDisposable = newsListBySourceViewModel
+                                .searchPagerObservable
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(newsSearchAdapter::submitPage)
 
-                        with(binding) {
                             newsListBySourceSwipeRefreshLayout.isVisible = false
                             newsListBySourceSearchRecyclerView.isVisible = true
-                        }
-                        return true
-                    }
-
-                    override fun onMenuItemActionCollapse(p0: MenuItem): Boolean {
-                        with(binding) {
+                        },
+                        onCollapse = {
                             newsListBySourceSwipeRefreshLayout.isVisible = true
                             newsListBySourceSearchRecyclerView.isVisible = false
+                            searchDisposable?.dispose()
                         }
-                        searchDisposable?.dispose()
-                        return true
-                    }
-                }
-            )
+                    )
+                )
+            }
         }
 
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean = true

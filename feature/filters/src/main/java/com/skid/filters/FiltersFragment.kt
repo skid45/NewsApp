@@ -27,8 +27,8 @@ import com.skid.filters.databinding.FragmentFiltersBinding
 import com.skid.filters.di.FiltersComponentViewModel
 import com.skid.filters.model.Language
 import com.skid.filters.model.Sorting
+import com.skid.ui.resolveAttributeColor
 import com.skid.utils.getDisplayChosenRange
-import com.skid.utils.resolveAttributeColor
 import java.util.Calendar
 import java.util.TimeZone
 import javax.inject.Inject

@@ -13,12 +13,29 @@
         <item name="labelVisibilityMode">selected</item>
     </style>
 
+    <style name="BottomNavigationViewStyle.Dark">
+        <item name="backgroundTint">?attr/colorSurfaceContainerHighest</item>
+        <item name="itemIconTint">@color/primary_100</item>
+        <item name="itemTextColor">@color/neutral_90</item>
+        <item name="itemActiveIndicatorStyle">
+            @style/Widget.Material3.BottomNavigationView.ActiveIndicator.Secondary30
+        </item>
+    </style>
+
     <style name="Widget.Material3.BottomNavigationView.ActiveIndicator.Primary50">
         <item name="android:color">@color/primary_50</item>
     </style>
 
+    <style name="Widget.Material3.BottomNavigationView.ActiveIndicator.Secondary30">
+        <item name="android:color">@color/secondary_30</item>
+    </style>
+
     <style name="AppBarLayoutStyle" parent="Widget.Material3.AppBarLayout">
         <item name="android:background">@color/primary_60</item>
+    </style>
+
+    <style name="AppBarLayoutStyle.Dark">
+        <item name="android:background">@color/neutral_10</item>
     </style>
 
     <style name="MaterialToolbarStyle" parent="Widget.Material3.Toolbar">
@@ -26,6 +43,10 @@
         <item name="titleTextAppearance">?attr/textAppearanceTitleLarge</item>
         <item name="titleTextColor">@color/neutral_99</item>
         <item name="collapseIcon">@drawable/ic_arrow_back</item>
+    </style>
+
+    <style name="MaterialToolbarStyle.Dark">
+        <item name="titleTextColor">@color/neutral_90</item>
     </style>
 
     <style name="CircleImageViewStyle">
@@ -36,5 +57,4 @@
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar">
         <item name="searchIcon">@drawable/ic_search</item>
     </style>
-
 </resources>

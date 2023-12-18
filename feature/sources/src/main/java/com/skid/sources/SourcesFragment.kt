@@ -25,6 +25,8 @@ import com.skid.sources.databinding.FragmentSourcesBinding
 import com.skid.sources.databinding.SourcesItemBinding
 import com.skid.sources.di.SourcesComponentViewModel
 import com.skid.ui.createAdapter
+import com.skid.ui.onSearchItemCollapseInDarkTheme
+import com.skid.ui.searchItemOnActionExpandListener
 import com.skid.utils.Constants.ERROR_RESULT_KEY
 import com.skid.utils.collectFlow
 import javax.inject.Inject
@@ -100,7 +102,10 @@ class SourcesFragment : Fragment() {
     private fun createSourcesAdapter() = createAdapter(
         binding = { inflater, parent -> SourcesItemBinding.inflate(inflater, parent, false) },
         bind = { source ->
-            root.setOnClickListener { router.onNewsListBySource(source.id, source.name) }
+            root.setOnClickListener {
+                onSearchItemCollapseInDarkTheme()
+                router.onNewsListBySource(source.id, source.name)
+            }
             sourcesItemName.text = source.name
             sourcesItemCategory.text = source.category
             sourcesItemCountry.text = source.country
@@ -133,16 +138,9 @@ class SourcesFragment : Fragment() {
                 }
             )
             searchItem.setOnActionExpandListener(
-                object : MenuItem.OnActionExpandListener {
-                    override fun onMenuItemActionExpand(p0: MenuItem): Boolean {
-                        return true
-                    }
-
-                    override fun onMenuItemActionCollapse(p0: MenuItem): Boolean {
-                        sourcesViewModel.onEvent(SourcesEvent.OnUpdateSources)
-                        return true
-                    }
-                }
+                searchItemOnActionExpandListener(
+                    onCollapse = { sourcesViewModel.onEvent(SourcesEvent.OnUpdateSources) }
+                )
             )
         }
 

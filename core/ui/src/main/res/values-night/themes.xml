@@ -1,7 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Base.Theme.NewsApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <item name="android:statusBarColor">@android:color/transparent</item> //
+        <item name="android:navigationBarColor">?attr/colorSurfaceContainerHighest</item> //
+
+        <item name="colorPrimary">@color/primary_80</item>
+        <item name="colorOnPrimary">@color/primary_20</item>
+        <item name="colorPrimaryContainer">@color/primary_30</item>
+        <item name="colorOnPrimaryContainer">@color/primary_90</item>
+
+        <item name="colorSecondary">@color/secondary_80</item>
+        <item name="colorOnSecondary">@color/secondary_20</item>
+        <item name="colorSecondaryContainer">@color/secondary_30</item>
+        <item name="colorOnSecondaryContainer">@color/secondary_90</item>
+
+        <item name="colorTertiary">@color/tertiary_80</item>
+        <item name="colorOnTertiary">@color/tertiary_20</item>
+        <item name="colorTertiaryContainer">@color/tertiary_30</item>
+        <item name="colorOnTertiaryContainer">@color/tertiary_90</item>
+
+        <item name="colorError">@color/error_80</item>
+        <item name="colorOnError">@color/error_20</item>
+        <item name="colorErrorContainer">@color/error_30</item>
+        <item name="colorOnErrorContainer">@color/error_90</item>
+
+        <item name="android:colorBackground">@color/neutral_10</item>
+        <item name="colorOnBackground">@color/neutral_90</item>
+
+        <item name="colorSurface">@color/neutral_10</item>
+        <item name="colorOnSurface">@color/neutral_90</item>
+        <item name="colorSurfaceVariant">@color/neutral_variant_30</item>
+        <item name="colorOnSurfaceVariant">@color/neutral_variant_80</item>
+
+        <item name="colorOutline">@color/neutral_variant_60</item>
+        <item name="colorOutlineVariant">@color/neutral_variant_30</item>
+
+
+        <!--    Typography    -->
+        <item name="android:textColorPrimary">@color/primary_100</item>
+
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.NewsApp.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.NewsApp.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.NewsApp.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.NewsApp.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.NewsApp.HeadlineMedium
+        </item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.NewsApp.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.NewsApp.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.NewsApp.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.NewsApp.TitleSmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.NewsApp.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.NewsApp.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.NewsApp.LabelSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.NewsApp.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.NewsApp.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.NewsApp.BodySmall</item>
+
+
+        <item name="bottomNavigationStyle">@style/BottomNavigationViewStyle.Dark</item>
+        <item name="appBarLayoutStyle">@style/AppBarLayoutStyle.Dark</item>
+        <item name="toolbarStyle">@style/MaterialToolbarStyle.Dark</item>
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
+
     </style>
 </resources>

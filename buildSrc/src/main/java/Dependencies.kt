@@ -12,6 +12,8 @@ object Dependencies {
     const val androidxEspresso =
         "androidx.test.espresso:espresso-core:${Versions.androidxEspressoVersion}"
     const val mockk = "io.mockk:mockk:${Versions.mockkVersion}"
+    const val mockkAndroid = "io.mockk:mockk-android:${Versions.mockkVersion}"
+    const val mockkAgent = "io.mockk:mockk-agent:${Versions.mockkVersion}"
     const val jUnitParams = "pl.pragmatists:JUnitParams:${Versions.jUnitParamsVersion}"
 
 
@@ -31,6 +33,7 @@ object Dependencies {
 
     const val fragment = "androidx.fragment:fragment:${Versions.fragmentVersion}"
     const val fragmentKtx = "androidx.fragment:fragment-ktx:${Versions.fragmentVersion}"
+    const val fragmentTesting = "androidx.fragment:fragment-testing:${Versions.fragmentVersion}"
 
     const val lifecycle = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycleVersion}"
 

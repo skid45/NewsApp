@@ -1,10 +1,7 @@
 package com.skid.utils
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.TypedValue
-import androidx.annotation.AttrRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -27,14 +24,6 @@ import java.util.TimeZone
 
 fun String.getCountryName(): String {
     return Locale("", this).displayCountry
-}
-
-fun Context.resolveAttributeColor(@AttrRes attrId: Int): Int {
-    return TypedValue().apply {
-        this@resolveAttributeColor
-            .theme
-            .resolveAttribute(attrId, this, true)
-    }.data
 }
 
 fun <T : Flow<R>, R> Fragment.collectFlow(flow: T, collectBlock: suspend (R) -> Unit) {

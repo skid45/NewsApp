@@ -106,8 +106,8 @@
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
-    <style name="TextAppearance.NewsApp.BodyLarge.OnPrimary">
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+    <style name="TextAppearance.NewsApp.BodyLarge.White">
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="TextAppearance.NewsApp.LabelSmall.Primary">

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ArticleFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            style="?attr/collapsingToolbarLayoutLargeStyle"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
+            android:fitsSystemWindows="true"
+            app:collapsedTitleTextColor="@color/primary_100"
+            app:contentScrim="@color/neutral_10"
+            app:expandedTitleTextColor="@android:color/transparent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+            <ImageView
+                android:id="@+id/article_profile_toolbar_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/article_image"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/thumbnail" />
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/article_profile_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:layout_collapseMode="pin"
+                app:menu="@menu/article_profile_menu"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:titleCentered="true"
+                tools:title="How Queen Elizabeth’s coronation helped start Matchbox cars" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorSurface"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp">
+
+                <TextView
+                    android:id="@+id/article_profile_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
+                    android:textColor="?attr/colorOnSurface"
+                    tools:text="How Queen Elizabeth’s coronation helped start Matchbox cars" />
+
+                <TextView
+                    android:id="@+id/article_profile_published_at"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="Mar 20, 2023 | 10:57 AM" />
+
+                <TextView
+                    android:id="@+id/article_profile_source_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="BBC" />
+
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                app:dividerColor="?attr/colorOutlineVariant" />
+
+            <TextView
+                android:id="@+id/article_profile_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:linksClickable="true"
+                android:padding="16dp"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:textColor="?attr/colorOnSurface"
+                tools:text="Washington, DCCNN —
+US consumer confidence worsened in April as Americans become more pessimistic about the job market.
+The Conference Board’s Consumer Confidence Index, which measures attitudes toward the economy and the job market, fell to 101.3 in April, down from 104 in March and marking the lowest level since July 2022. The business group’s measure of economic expectations fell in April and has remained below a threshold “associated with a recession within the next year” for every month since February 2022, with the exception of an uptick in December.
+Consumer attitudes have held steady since the turbulence in the banking industry last month, but high inflation and economic uncertainty have continued to weigh on consumers.
+“Consumers became more pessimistic about the outlook for both business conditions and labor markets,” said Ataman Ozyildirim, senior director of economics at The Conference Board, in a statement accompanying the data. “Compared to last month, fewer households expect business conditions to improve and more expect worsening of conditions in the next six months. They also expect fewer jobs to be available over the short term.”
+That matches government figures showing the labor market has begun to show some cracks. Employers added 236,000 jobs in March, the smallest gain in two years, and job openings fell below 10 million for the first time since May 2021. Large companies have continued to announce layoffs, such as 3M, which announced on Tuesday that it is cutting 6,000 jobs.
+The April survey showed that worries about the economy slipping into a recession persisted last month. Economists, including those at the Federal Reserve, expect a recession later in the year as the Fed’s rate hikes take a deeper hold. The share of consumers expecting more jobs to be available fell to 12.5% in April, down from 15.5% in March, while the share who anticipate fewer jobs increased to 21% from 20.5% during the same period." />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

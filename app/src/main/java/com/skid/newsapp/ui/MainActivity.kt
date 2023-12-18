@@ -1,5 +1,6 @@
 package com.skid.newsapp.ui
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -31,9 +32,9 @@ import com.skid.newsapp.databinding.ActivityMainBinding
 import com.skid.newsapp.ui.navigation.Screens
 import com.skid.saved.SavedFragment
 import com.skid.sources.SourcesFragment
+import com.skid.ui.resolveAttributeColor
 import com.skid.utils.Constants.SELECTED_ITEM_ID_KEY
 import com.skid.utils.collectFlow
-import com.skid.utils.resolveAttributeColor
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -134,28 +135,26 @@ class MainActivity : AppCompatActivity() {
 
     @OptIn(ExperimentalBadgeUtils::class)
     private fun setupToolbar() {
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+        supportActionBar?.setHomeAsUpIndicator(com.skid.ui.R.drawable.ic_arrow_back)
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(com.skid.ui.R.menu.main_activity_menu, menu)
-                val searchView =
-                    menu.findItem(com.skid.ui.R.id.main_activity_menu_search).actionView as SearchView
+                val searchItem = menu.findItem(com.skid.ui.R.id.main_activity_menu_search)
+                val searchView = searchItem.actionView as SearchView
                 val searchEditText =
                     searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
                 val searchCloseButton =
                     searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
 
-                val onPrimary =
-                    resolveAttributeColor(com.google.android.material.R.attr.colorOnPrimary)
-                val surfaceVariant =
-                    resolveAttributeColor(com.google.android.material.R.attr.colorSurfaceVariant)
-                searchEditText.setTextAppearance(com.skid.ui.R.style.TextAppearance_NewsApp_BodyLarge_OnPrimary)
-                searchEditText.setHintTextColor(surfaceVariant)
+                val outline =
+                    resolveAttributeColor(com.google.android.material.R.attr.colorOutline)
+                searchEditText.setTextAppearance(com.skid.ui.R.style.TextAppearance_NewsApp_BodyLarge_White)
+                searchEditText.setHintTextColor(outline)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     searchEditText.textCursorDrawable =
                         AppCompatResources.getDrawable(this@MainActivity, R.drawable.cursor)
                 }
-                DrawableCompat.setTint(searchCloseButton.drawable, onPrimary)
+                DrawableCompat.setTint(searchCloseButton.drawable, Color.WHITE)
 
                 filtersBadgeDrawable = BadgeDrawable.create(this@MainActivity).apply {
                     isVisible = mainViewModel.numberOfFilters.value > 0

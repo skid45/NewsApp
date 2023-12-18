@@ -26,6 +26,8 @@ import com.skid.saved.databinding.FragmentSavedBinding
 import com.skid.saved.di.SavedComponentViewModel
 import com.skid.ui.createAdapter
 import com.skid.ui.databinding.ArticleItemBinding
+import com.skid.ui.onSearchItemCollapseInDarkTheme
+import com.skid.ui.searchItemOnActionExpandListener
 import com.skid.utils.collectFlow
 import javax.inject.Inject
 import javax.inject.Provider
@@ -84,13 +86,21 @@ class SavedFragment : Fragment() {
 
         savedSearchRecyclerView.layoutManager = LinearLayoutManager(context)
         savedSearchRecyclerView.adapter = savedArticlesByQueryAdapter
-        savedSearchRecyclerView.addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
+        savedSearchRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                RecyclerView.VERTICAL
+            )
+        )
     }
 
     private fun createArticlesAdapter() = createAdapter(
         binding = { inflater, parent -> ArticleItemBinding.inflate(inflater, parent, false) },
         bind = { article ->
-            root.setOnClickListener { router.onArticleProfile(article) }
+            root.setOnClickListener {
+                onSearchItemCollapseInDarkTheme()
+                router.onArticleProfile(article)
+            }
             articleItemImage.load(article.imageUrl) {
                 crossfade(true)
             }
@@ -150,19 +160,16 @@ class SavedFragment : Fragment() {
             )
             with(binding) {
                 searchItem.setOnActionExpandListener(
-                    object : MenuItem.OnActionExpandListener {
-                        override fun onMenuItemActionExpand(p0: MenuItem): Boolean {
+                    searchItemOnActionExpandListener(
+                        onExpand = {
                             savedSwipeRefreshLayout.isVisible = false
                             savedSearchRecyclerView.isVisible = true
-                            return true
-                        }
-
-                        override fun onMenuItemActionCollapse(p0: MenuItem): Boolean {
+                        },
+                        onCollapse = {
                             savedSwipeRefreshLayout.isVisible = true
                             savedSearchRecyclerView.isVisible = false
-                            return true
                         }
-                    }
+                    )
                 )
             }
         }
