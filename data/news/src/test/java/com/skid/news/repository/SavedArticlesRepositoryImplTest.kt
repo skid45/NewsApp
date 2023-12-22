@@ -1,6 +1,7 @@
 package com.skid.news.repository
 
 import com.skid.database.sources.dao.SavedArticlesDao
+import com.skid.database.sources.dao.SourcesDao
 import com.skid.database.sources.model.SavedArticleEntity
 import com.skid.news.mapper.toArticle
 import com.skid.news.mapper.toSavedArticleEntity
@@ -36,12 +37,16 @@ class SavedArticlesRepositoryImplTest {
     @MockK
     lateinit var savedArticlesDao: SavedArticlesDao
 
+    @MockK
+    lateinit var sourcesDao: SourcesDao
+
     private val savedArticlesDB = mutableListOf<SavedArticleEntity>()
 
     @Before
     fun setup() {
         savedArticlesRepositoryImpl = SavedArticlesRepositoryImpl(
-            savedArticlesDao = savedArticlesDao
+            savedArticlesDao = savedArticlesDao,
+            sourcesDao = sourcesDao
         )
     }
 
@@ -81,14 +86,20 @@ class SavedArticlesRepositoryImplTest {
     @Test
     fun `saveArticle saves correct articles`() {
         val article: Article = mockk(relaxed = true)
-        val savedArticleEntity = article.toSavedArticleEntity()
+        val savedArticleEntity = article.toSavedArticleEntity("test language")
         coEvery {
             savedArticlesDao.insert(any())
         } answers { savedArticlesDB.add(savedArticleEntity) }
+        coEvery {
+            sourcesDao.getSourceByName(article.sourceName)
+        } returns mockk(relaxed = true) {
+            every { language } returns "test language"
+        }
 
         runBlocking { savedArticlesRepositoryImpl.saveArticle(article) }
 
         coVerify { savedArticlesDao.insert(any()) }
+        coVerify { sourcesDao.getSourceByName(article.sourceName) }
         assertTrue(savedArticlesDB.isNotEmpty())
         assertEquals(savedArticleEntity, savedArticlesDB.first())
     }
@@ -98,12 +109,11 @@ class SavedArticlesRepositoryImplTest {
         val firstArticle: Article = mockk(relaxed = true) {
             every { url } returns "test1"
         }
-        val firstSavedArticleEntity = firstArticle.toSavedArticleEntity()
+        val firstSavedArticleEntity = firstArticle.toSavedArticleEntity("test1 language")
         val secondArticle: Article = mockk(relaxed = true) {
             every { url } returns "test2"
         }
-        val secondSavedArticleEntity = secondArticle.toSavedArticleEntity()
-
+        val secondSavedArticleEntity = secondArticle.toSavedArticleEntity("test2 language")
         var insertCalls = 0
         coEvery {
             savedArticlesDao.insert(any())
@@ -111,6 +121,15 @@ class SavedArticlesRepositoryImplTest {
             if (insertCalls == 0) savedArticlesDB.add(firstSavedArticleEntity)
             else savedArticlesDB.add(secondSavedArticleEntity)
             insertCalls++
+        }
+        var getSourceCalls = 0
+        coEvery {
+            sourcesDao.getSourceByName(any())
+        } answers {
+            if (getSourceCalls == 0) {
+                getSourceCalls++
+                mockk(relaxed = true) { every { language } returns "test1 language" }
+            } else mockk(relaxed = true) { every { language } returns "test2 language" }
         }
 
         runBlocking {
@@ -210,17 +229,17 @@ class SavedArticlesRepositoryImplTest {
     }
 
     @Test
-    fun `getAllArticles by null chosenDates with empty database returns empty list`() {
+    fun `getAllArticles by null params with empty database returns empty list`() {
         coEvery { savedArticlesDao.getAllArticles() } returns savedArticlesDB
 
-        val result = runBlocking { savedArticlesRepositoryImpl.getAllArticles(null) }
+        val result = runBlocking { savedArticlesRepositoryImpl.getAllArticles(null, null) }
 
-        coVerify { savedArticlesDao.getAllArticles(null, null) }
+        coVerify { savedArticlesDao.getAllArticles(null, null, null) }
         assertTrue(result.isEmpty())
     }
 
     @Test
-    fun `getAllArticles by null chosenDates with non-empty database returns full list of articles from database`() {
+    fun `getAllArticles by null params with non-empty database returns full list of articles from database`() {
         val mockSavedArticleEntityList = listOf<SavedArticleEntity>(
             mockk(relaxed = true) { every { url } returns "test1" },
             mockk(relaxed = true) { every { url } returns "test2" },
@@ -229,9 +248,9 @@ class SavedArticlesRepositoryImplTest {
         savedArticlesDB.addAll(mockSavedArticleEntityList)
         coEvery { savedArticlesDao.getAllArticles() } returns savedArticlesDB
 
-        val result = runBlocking { savedArticlesRepositoryImpl.getAllArticles(null) }
+        val result = runBlocking { savedArticlesRepositoryImpl.getAllArticles(null, null) }
 
-        coVerify { savedArticlesDao.getAllArticles(null, null) }
+        coVerify { savedArticlesDao.getAllArticles(null, null, null) }
         assertTrue(result.isNotEmpty())
         assertEquals(
             mockSavedArticleEntityList.map(SavedArticleEntity::toArticle),
@@ -259,7 +278,7 @@ class SavedArticlesRepositoryImplTest {
             )
         }
 
-        val result = runBlocking { savedArticlesRepositoryImpl.getAllArticles(chosenDates) }
+        val result = runBlocking { savedArticlesRepositoryImpl.getAllArticles(chosenDates, null) }
 
         coVerify {
             savedArticlesDao.getAllArticles(
@@ -287,7 +306,8 @@ class SavedArticlesRepositoryImplTest {
                 every { publishedAt } returns Calendar.getInstance().apply { timeInMillis = 180 }
             },
             mockk(relaxed = true) {
-                every { publishedAt } returns Calendar.getInstance().apply { timeInMillis = 280 + TimeUnit.DAYS.toMillis(1) }
+                every { publishedAt } returns Calendar.getInstance()
+                    .apply { timeInMillis = 280 + TimeUnit.DAYS.toMillis(1) }
             }
         )
         savedArticlesDB.addAll(mockSavedArticleEntityList)
@@ -302,7 +322,7 @@ class SavedArticlesRepositoryImplTest {
                 .plus(TimeUnit.DAYS.toMillis(1))
         }
 
-        val result = runBlocking { savedArticlesRepositoryImpl.getAllArticles(chosenDates) }
+        val result = runBlocking { savedArticlesRepositoryImpl.getAllArticles(chosenDates, null) }
 
         coVerify {
             savedArticlesDao.getAllArticles(
