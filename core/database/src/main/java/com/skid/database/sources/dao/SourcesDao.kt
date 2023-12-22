@@ -24,6 +24,9 @@ interface SourcesDao {
             "(:language IS NULL OR language = :language)")
     fun getSourcesByCategory(category: String, language: String?): Single<List<SourceEntity>>
 
+    @Query("SELECT * FROM sources WHERE name = :name")
+    suspend fun getSourceByName(name: String): SourceEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllSources(sources: List<SourceEntity>)
 

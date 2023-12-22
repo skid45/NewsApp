@@ -18,15 +18,24 @@ interface SavedArticlesDao {
     @Query("DELETE FROM saved_articles WHERE url = :url")
     suspend fun deleteByUrl(url: String)
 
-    @Query("SELECT * FROM saved_articles WHERE " +
-            "(:from IS NULL OR published_at >= :from) AND (:to IS NULL OR published_at <= :to)" +
-            " ORDER BY published_at DESC")
-    suspend fun getAllArticles(from: Long? = null, to: Long? = null): List<SavedArticleEntity>
+    @Query(
+        "SELECT * FROM saved_articles WHERE " +
+                "(:from IS NULL OR published_at >= :from) AND (:to IS NULL OR published_at <= :to) AND" +
+                "(:language IS NULL OR language = :language)" +
+                " ORDER BY published_at DESC"
+    )
+    suspend fun getAllArticles(
+        from: Long? = null,
+        to: Long? = null,
+        language: String? = null,
+    ): List<SavedArticleEntity>
 
-    @Query("SELECT * FROM saved_articles WHERE " +
-            "title LIKE '%' || :query || '%' OR " +
-            "description LIKE '%' || :query || '%' OR " +
-            "content LIKE '%' || :query || '%'")
+    @Query(
+        "SELECT * FROM saved_articles WHERE " +
+                "title LIKE '%' || :query || '%' OR " +
+                "description LIKE '%' || :query || '%' OR " +
+                "content LIKE '%' || :query || '%'"
+    )
     suspend fun getArticlesByQuery(query: String): List<SavedArticleEntity>
 
     @Query("DELETE FROM saved_articles WHERE created_at < :timestampInMillis")

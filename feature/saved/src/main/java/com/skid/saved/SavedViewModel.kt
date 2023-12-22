@@ -29,7 +29,7 @@ class SavedViewModel @Inject constructor(
     val savedArticles = filtersRepository
         .getFilters()
         .combine(refresh) { filters, _ ->
-            savedArticlesRepository.getAllArticles(filters.chosenDates)
+            savedArticlesRepository.getAllArticles(filters.chosenDates, filters.language?.apiName)
         }
         .onEach { if (refresh.value) onRefreshChanged(false) }
         .stateIn(

@@ -14,6 +14,7 @@ data class SavedArticleEntity(
     @ColumnInfo(name = "published_at") val publishedAt: Calendar,
     @ColumnInfo(name = "image_url") val imageUrl: String?,
     @ColumnInfo(name = "source_name") val sourceName: String,
+    @ColumnInfo(name = "language") val language: String,
     @ColumnInfo(name = "source_drawable_id") val sourceDrawableId: Int,
-    @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis()
+    @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis(),
 )

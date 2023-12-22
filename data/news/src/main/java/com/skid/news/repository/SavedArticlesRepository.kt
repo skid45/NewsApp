@@ -12,7 +12,7 @@ interface SavedArticlesRepository {
 
     suspend fun deleteArticleByUrl(url: String)
 
-    suspend fun getAllArticles(chosenDates: Pair<Calendar, Calendar>?): List<Article>
+    suspend fun getAllArticles(chosenDates: Pair<Calendar, Calendar>?, language: String?): List<Article>
 
     suspend fun getArticlesByQuery(query: String): List<Article>
 

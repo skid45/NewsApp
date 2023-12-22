@@ -21,7 +21,7 @@ fun ArticleDTO.toArticle(): Article {
     )
 }
 
-fun Article.toSavedArticleEntity(): SavedArticleEntity {
+fun Article.toSavedArticleEntity(language: String): SavedArticleEntity {
     return SavedArticleEntity(
         url = url,
         title = title,
@@ -30,6 +30,7 @@ fun Article.toSavedArticleEntity(): SavedArticleEntity {
         publishedAt = publishedAt,
         imageUrl = imageUrl,
         sourceName = sourceName,
+        language = language,
         sourceDrawableId = sourceDrawableId
     )
 }
