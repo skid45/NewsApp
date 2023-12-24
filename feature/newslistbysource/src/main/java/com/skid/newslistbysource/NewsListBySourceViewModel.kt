@@ -37,6 +37,9 @@ class NewsListBySourceViewModel @AssistedInject constructor(
 
     val pagingDataReplaySubject = ReplaySubject.create<PagingData<Article>>()
 
+    val pagingError = BehaviorSubject
+        .createDefault<PagingData.Error<Article>>(PagingData.Error(null))
+
     private val filters = BehaviorSubject.create<Filters>()
 
 
@@ -74,7 +77,10 @@ class NewsListBySourceViewModel @AssistedInject constructor(
             pager
                 .switchMap { pager -> pager.loadNextPage() }
                 .subscribe { pagingData ->
-                    pagingDataReplaySubject.onNext(pagingData)
+                    when (pagingData) {
+                        is PagingData.Page -> pagingDataReplaySubject.onNext(pagingData)
+                        is PagingData.Error -> pagingError.onNext(pagingData)
+                    }
                 }
         )
 
@@ -137,6 +143,10 @@ class NewsListBySourceViewModel @AssistedInject constructor(
 
     fun onQueryChanged(query: String?) {
         this.query.onNext(query)
+    }
+
+    fun onErrorIsHandled() {
+        pagingError.onNext(PagingData.Error(null))
     }
 
     override fun onCleared() {

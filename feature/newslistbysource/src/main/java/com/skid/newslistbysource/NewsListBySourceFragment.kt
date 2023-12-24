@@ -72,8 +72,7 @@ class NewsListBySourceFragment : Fragment() {
                 articleItemSourceImage.setImageResource(article.sourceDrawableId)
                 articleItemSourceName.text = article.sourceName
                 articleItemTitle.text = article.title
-            },
-            doOnError = router::onError
+            }
         )
     }
 
@@ -123,6 +122,7 @@ class NewsListBySourceFragment : Fragment() {
         setupRecyclerView()
         setupSwipeRefresh()
         setupNewsPagerObserver()
+        setupPagingErrorObserver()
     }
 
     override fun onDestroyView() {
@@ -222,6 +222,22 @@ class NewsListBySourceFragment : Fragment() {
             Constants.ERROR_RESULT_KEY,
             viewLifecycleOwner
         ) { _, _ -> newsListBySourceViewModel.refreshPager() }
+    }
+
+    private fun setupPagingErrorObserver() {
+        val disposable = newsListBySourceViewModel
+            .pagingError
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { pagingDataError ->
+                if (pagingDataError.error != null) {
+                    router.onError(pagingDataError.error.toString())
+                    newsListBySourceViewModel.onErrorIsHandled()
+                }
+            }
+
+
+        disposables.add(disposable)
     }
 
 }
