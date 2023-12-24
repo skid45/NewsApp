@@ -101,7 +101,21 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
+        activityMainBottomNavigationView.setOnItemReselectedListener { item ->
+            if (supportFragmentManager.backStackEntryCount > 0) {
+                when (item.itemId) {
+                    R.id.bottom_menu_headlines -> router.backTo(Screens.HeadlinesScreen)
+                    R.id.bottom_menu_saved -> router.backTo(Screens.SavedScreen)
+                    R.id.bottom_menu_sources -> router.backTo(Screens.SourcesScreen)
+                }
+            } else {
+                when (item.itemId) {
+                    R.id.bottom_menu_headlines -> router.newRootScreen(Screens.HeadlinesScreen)
+                    R.id.bottom_menu_saved -> router.newRootScreen(Screens.SavedScreen)
+                    R.id.bottom_menu_sources -> router.newRootScreen(Screens.SourcesScreen)
+                }
+            }
+        }
     }
 
     override fun onResumeFragments() {
